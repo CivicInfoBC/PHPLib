@@ -1,0 +1,82 @@
+<?php
+
+
+	namespace CivicInfoBC;
+	
+	
+	/**
+	 *	Contains functions for encoding and decoding
+	 *	JSON.
+	 */
+	class JSON {
+	
+	
+		private static function raise () {
+		
+			throw new \Exception(
+				json_last_error_msg(),
+				json_last_error()
+			);
+		
+		}
+	
+	
+		/**
+		 *	Encodes data as JSON.
+		 *
+		 *	\param [in] $data
+		 *		The data to encode.
+		 *	\param [in] $depth
+		 *		The maximum depth to which this function
+		 *		will recurse to encode \em data.  Defaults
+		 *		to \em null in which case a sensible
+		 *		default will be used.
+		 */
+		public static function Encode ($data, $depth=null) {
+		
+			if (($json=is_null($depth)
+				?	json_encode($data)
+				:	json_encode($data,0,$depth)
+			)===false) self::raise();
+			
+			return $json;
+		
+		}
+		
+		
+		/**
+		 *	Decodes JSON data.
+		 *
+		 *	\param [in] $json
+		 *		The JSON to decode.
+		 *	\param [in] $depth
+		 *		The maximum depth to which this function
+		 *		will recurse to decode \em json.  Defaults
+		 *		to \em null in which case a sensible
+		 *		default will be used.
+		 */
+		public static function Decode ($json, $depth=null) {
+		
+			//	Is the string literally "null"?
+			//
+			//	If it is, json_decode will return
+			//	null, but null is supposed to be
+			//	interpreted as an error
+			//
+			//	http://www.reddit.com/r/lolphp
+			if (strtolower(trim($json))==='null') return null;
+		
+			if (is_null($obj=is_null($depth)
+				?	json_decode($json)
+				:	json_decode($json,false,$depth)
+			)) self::raise();
+			
+			return $obj;
+		
+		}
+	
+	
+	}
+
+
+?>
