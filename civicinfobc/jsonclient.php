@@ -17,10 +17,16 @@
 	 *	name.
 	 */
 	class JSONClient {
-	
-	
-		private $request;
+		
+		
 		private $url;
+		
+		
+		/**
+		 *	The HTTPRequest object that the client will use
+		 *	to make HTTP requests.
+		 */
+		public $request;
 		
 		
 		/**
@@ -47,6 +53,9 @@
 			//	to handle all HTTP requests for JSON
 			$this->request=new HTTPRequest();
 			$this->request->user_agent='CivicInfo BC JSON Client';
+			//	Sensible defaults
+			$this->max_header_bytes=65536;
+			$this->max_body_bytes=65535;
 		
 		}
 		
