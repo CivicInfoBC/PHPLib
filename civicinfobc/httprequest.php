@@ -162,7 +162,7 @@
 			//	Default to a GET
 			} else {
 			
-				$this->set(CURLOPT_GET,true);
+				$this->set(CURLOPT_HTTPGET,true);
 			
 			}
 		
