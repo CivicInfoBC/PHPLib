@@ -158,6 +158,11 @@
 			} else if ($this->verb==='HEAD') {
 			
 				$this->set(CURLOPT_NOBODY,true);
+				
+			//	Is this a DELETE?
+			} else if ($this->verb==='DELETE') {
+			
+				$this->set(CURLOPT_CUSTOMREQUEST,'DELETE');
 			
 			//	Default to a GET
 			} else {
