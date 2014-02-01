@@ -34,33 +34,6 @@
 		}
 		
 		
-		private static function query_string ($arr) {
-		
-			$retr='';
-			$first=true;
-			foreach ($arr as $key=>$value) {
-			
-				if ($first) {
-				
-					$first=false;
-					
-					$retr.='?';
-				
-				} else {
-				
-					$retr.='&';
-				
-				}
-				
-				$retr.=rawurlencode($key).'='.rawurlencode($value);
-			
-			}
-			
-			return $retr;
-		
-		}
-		
-		
 		private function get_root () {
 		
 			return self::ToSSL($this->root);
@@ -70,14 +43,14 @@
 		
 		public function Get ($controller=null, $args=array(), $get=array()) {
 		
-			return $this->get_root().self::component($controller).self::component($args).self::query_string($get);
+			return $this->get_root().self::component($controller).self::component($args).URL::MakeQueryString($get);
 		
 		}
 		
 		
 		public function GetFile ($components, $get=array()) {
 		
-			return $this->get_root().self::component($components).self::query_string($get);
+			return $this->get_root().self::component($components).URL::MakeQueryString($get);
 		
 		}
 		
@@ -86,7 +59,7 @@
 		
 			$arr=array();
 			foreach (Request::$get as $key=>$value) $arr[$key]=$value;
-			return Server::GetRoot().self::query_string($arr);
+			return Server::GetRoot().URL::MakeQueryString($arr);
 		
 		}
 		

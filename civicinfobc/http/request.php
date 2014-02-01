@@ -218,7 +218,7 @@
 			
 				if ($str!=='') $str.=';';
 				
-				$str.=rawurlencode($key).'='.rawurlencode($value);
+				$str.=URL::Escape($key).'='.URL::Escape($value);
 			
 			}
 			
