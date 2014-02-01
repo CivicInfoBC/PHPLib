@@ -8,24 +8,6 @@
 	 *	Contains functions for cryptography.
 	 */
 	class Crypto {
-	
-	
-		private static function check_random ($str, $count) {
-		
-			//	Make sure that what we have is actually
-			//	a string
-			if (!is_string($str)) throw new \Exception('Failed to generate random bytes');
-			
-			//	Make sure we got enough bytes
-			if (($len=strlen($count))!==$count) throw new \Exception(
-				sprintf(
-					'Generated incorrect number of random bytes (requested %s generated %s)',
-					$count,
-					$len
-				)
-			);
-			
-		}
 		
 		
 		private static function get_capi () {
