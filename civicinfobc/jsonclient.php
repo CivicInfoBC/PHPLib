@@ -131,6 +131,10 @@
 		 *		decoding the JSON response.  Defaults to
 		 *		\em null which will use a sensible
 		 *		default.
+		 *
+		 *	\return
+		 *		An object representing the JSON the server
+		 *		returned, \em null if there was no response.
 		 */
 		public function Get ($endpoint, $data=null, $depth=null) {
 		
@@ -165,7 +169,11 @@
 		 *	\param [in] $depth
 		 *		The maximum depth to which to recurse in
 		 *		decoding the JSON response.  Defaults to
-		 *		\em null which will use a sensible default. 
+		 *		\em null which will use a sensible default.
+		 *
+		 *	\return
+		 *		An object representing the JSON that server
+		 *		returned, \em null if there was no response.
 		 */
 		public function Post ($endpoint, $data=null, $depth=null) {
 		
