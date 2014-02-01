@@ -174,9 +174,13 @@
 			//	Setup the request
 			$this->request->url=$request->GetURL($this->production);
 			$this->request->verb=$request->GetMethod();
-			$this->request->headers['Content-Type']=$request->GetContentType();
 			$this->request->headers['Accept']=$request->GetAccept();
-			if (strtoupper($this->request->verb)==='POST') $this->request->body=$request->GetBody();
+			if (strtoupper($this->request->verb)==='POST') {
+
+				$this->request->headers['Content-Type']=$request->GetContentType();
+				$this->request->body=$request->GetBody();
+				
+			}
 			
 			//	Make the request
 			$response=$this->request->Execute();
