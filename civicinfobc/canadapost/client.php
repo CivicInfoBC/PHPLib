@@ -82,24 +82,22 @@
 		
 		private static function get_message (\DOMNode $node) {
 		
-			$code=null;
-			$desc=null;
+			$w=new \CivicInfoBC\DOMWrapper($node);
 			
-			for (
-				$element=$node->firstChild;
-				!is_null($element);
-				$element=$element->nextSibling
-			) {
+			try {
 			
-				if (!($element instanceof \DOMElement)) continue;
-				
-				if ($element->tagName==='code') $code=$element->textContent;
-				else if ($element->tagName==='description') $desc=$element->textContent;
-				else return null;
+				if (
+					(($code=$w->code->textContent)==='') ||
+					(($desc=$w->description->textContent)==='')
+				) return null;
+			
+			} catch (\Exception $e) {
+			
+				return null;
 			
 			}
 			
-			return (is_null($code) || is_null($desc)) ? null : sprintf('Code %s, %s',$code,$desc);
+			return sprintf('Code %s, %s',$code,$desc);
 		
 		}
 		
@@ -108,27 +106,13 @@
 		
 			//	Get XML document and make sure it
 			//	has nodes
-			$xml=\CivicInfoBC\XML::Load($response->body);
+			$xml=new \CivicInfoBC\DOMWrapper(
+				\CivicInfoBC\XML::Load($response->body)
+			);
 			
 			//	Try and find the "messages" child
-			$messages=null;
-			for (
-				$element=$xml->firstChild;
-				!is_null($element);
-				$element=$element->nextSibling
-			) if (
-				($element instanceof \DOMElement) &&
-				($element->tagName==='messages')
-			) {
-			
-				$messages=$element;
-				
-				break;
-			
-			}
-			
-			//	If the "messages" node wasn't found, throw
-			if (is_null($messages)) self::raise_no_error_messages($response);
+			if (is_null($messages=$xml->messages)) self::raise_no_error_messages($response);
+			$messages=new \CivicInfoBC\DOMWrapper($messages,'message');
 			
 			//	Build a string from the children of the "messages"
 			//	node
@@ -137,13 +121,7 @@
 				$response->status
 			);
 			$first=true;
-			for (
-				$element=$messages->firstChild;
-				!is_null($element);
-				$element=$element->nextSibling
-			) {
-			
-				if (!($element instanceof \DOMElement)) continue;
+			foreach ($messages as $element) {
 			
 				if ($first) $first=false;
 				else $message.='; ';
