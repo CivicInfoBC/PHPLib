@@ -85,8 +85,8 @@
 		
 			//	If the thrown exception was not an HTTP
 			//	status exception, wrap it in one
-			if (!($ex instanceof HTTPStatus)) $ex=new HTTPStatus(
-				HTTPStatus::SERVER_ERROR,
+			if (!($ex instanceof HTTP\Status)) $ex=new HTTP\Status(
+				HTTP\Status::SERVER_ERROR,
 				$ex
 			);
 			
@@ -96,7 +96,7 @@
 			//	If the thrown exception was just a redirect,
 			//	that's not actually an error, so skip further
 			//	processing
-			if ($ex instanceof Redirect) return;
+			if ($ex instanceof HTTP\Redirect) return;
 			
 			//	Send mail if appropriate
 			$this->mail($ex);

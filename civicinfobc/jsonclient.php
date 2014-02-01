@@ -51,7 +51,7 @@
 			
 			//	Create an HTTP request object to use
 			//	to handle all HTTP requests for JSON
-			$this->request=new HTTPRequest();
+			$this->request=new HTTP\Request();
 			$this->request->user_agent='CivicInfo BC JSON Client';
 			//	Sensible defaults
 			$this->max_header_bytes=65536;

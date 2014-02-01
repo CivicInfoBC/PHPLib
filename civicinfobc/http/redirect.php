@@ -1,13 +1,13 @@
 <?php
 
 
-	namespace CivicInfoBC;
+	namespace CivicInfoBC\HTTP;
 	
 	
 	/**
 	 *	An HTTP 3xx status code.
 	 */
-	class Redirect extends HTTPStatus {
+	class Redirect extends Status {
 	
 	
 		public $location;
@@ -26,7 +26,7 @@
 		 *		The previous Exception object which
 		 *		cause this status, if applicable.
 		 */
-		public function __construct ($location, $status=HTTPStatus::Found, $prev=null) {
+		public function __construct ($location, $status=Status::Found, $prev=null) {
 		
 			$this->location=$location;
 			

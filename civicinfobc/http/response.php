@@ -1,13 +1,13 @@
 <?php
 
 
-	namespace CivicInfoBC;
+	namespace CivicInfoBC\HTTP;
 	
 	
 	/**
 	 *	A response to an HTTP request.
 	 */
-	class HTTPResponse {
+	class Response {
 	
 	
 		/**

@@ -1,13 +1,13 @@
 <?php
 
 
-	namespace CivicInfoBC;
+	namespace CivicInfoBC\HTTP;
 	
 	
 	/**
 	 *	Contains information about an HTTP status;
 	 */
-	class HTTPStatusInfo {
+	class StatusInfo {
 	
 	
 		/**

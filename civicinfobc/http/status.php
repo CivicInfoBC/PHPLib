@@ -1,14 +1,14 @@
 <?php
 
 
-	namespace CivicInfoBC;
+	namespace CivicInfoBC\HTTP;
 	
 	
 	/**
 	 *	An exception which encapsulates on
 	 *	HTTP status code.
 	 */
-	class HTTPStatus extends \Exception {
+	class Status extends \Exception {
 	
 	
 		private static $map=array(
@@ -224,7 +224,7 @@
 		
 		private static function lookup ($status) {
 		
-			$retr=new HTTPStatusInfo(
+			$retr=new StatusInfo(
 				$status,
 				null,
 				null
