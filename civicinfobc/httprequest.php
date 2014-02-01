@@ -429,10 +429,17 @@
 			$this->set_callbacks($response,$ex);
 			
 			//	Perform
-			if (curl_exec($this->handle)===false) $this->raise();
+			if (curl_exec($this->handle)===false) {
 			
-			//	If there was an error, rethrow it
-			if (!is_null($ex)) throw $ex;
+				//	If we have a more detailed error
+				//	than the one libcurl will provide,
+				//	throw it, otherwise get the error
+				//	from libcurl
+				if (is_null($ex)) $this->raise();
+				
+				throw $ex;
+			
+			}
 			
 			return $response;
 		
