@@ -159,6 +159,16 @@
 		}
 		
 		
+		/**
+		 *	Executes a request.
+		 *
+		 *	\param [in] $request
+		 *		The request object which encapsulates
+		 *		the request to perform.
+		 *
+		 *	\return
+		 *		The result of executing \em request.
+		 */
 		public function Execute (Request $request) {
 		
 			//	Setup the request
