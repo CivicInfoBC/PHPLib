@@ -64,7 +64,7 @@
 			//	interpreted as an error
 			//
 			//	http://www.reddit.com/r/lolphp
-			if (strtolower(trim($json))==='null') return null;
+			if (strtolower(String::Trim($json))==='null') return null;
 		
 			if (is_null($obj=is_null($depth)
 				?	json_decode($json)
