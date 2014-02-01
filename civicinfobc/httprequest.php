@@ -100,7 +100,7 @@
 		 */
 		public function __construct ($url=null) {
 		
-			//	Try and create a cURL handle
+			//	Try to create a cURL handle
 			if (($this->handle=curl_init())===false) throw new \Exception('Could not create cURL handle');
 			
 			try {
