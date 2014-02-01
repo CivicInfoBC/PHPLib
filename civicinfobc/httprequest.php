@@ -52,6 +52,24 @@
 		 */
 		public $require_ssl=false;
 		/**
+		 *	The maximum number of bytes which will be
+		 *	accepted as part of the header before
+		 *	the request will be terminated.
+		 *
+		 *	Default is \em null, which means an unlimited
+		 *	number.
+		 */
+		public $max_header_bytes=null;
+		/**
+		 *	The maximum number of bytes which will be
+		 *	accepted as part of the body before the request
+		 *	will be terminated.
+		 *
+		 *	Default is \em null, which means an unlimited
+		 *	number.
+		 */
+		public $max_body_bytes=null;
+		/**
 		 *	Whether the request should follow redirects
 		 *	or fail upon a 3xx status code.  If
 		 *	\em true, the request will follow up to
@@ -239,18 +257,35 @@
 		
 			//	Set a header function to handle/parse
 			//	incoming headers
+			$header_len=0;
+			$request=$this;
 			$this->set(
 				CURLOPT_HEADERFUNCTION,
-				function ($curl, $str) use ($response, &$ex) {
+				function ($curl, $str) use ($request, $response, &$ex, &$header_len) {
 				
 					//	Determine how long this string is
 					//	for deciding what to return
 					$len=strlen($str);
+					
+					//	If the header is empty, ignore it
+					if ($str==='') return $len;
+					
+					//	If the header is too long, error
+					//	and bail out
+					if (
+						!is_null($request->max_header_bytes) &&
+						(($header_len+$len)>$request->max_header_bytes)
+					) {
+					
+						$ex=new \Exception('Headers too long');
+						
+						return 0;
+					
+					}
+					
+					$header_len+=$len;
 				
 					try {
-				
-						//	If the header is empty, ignore it
-						if ($str==='') return $len;
 					
 						//	Is this the beginning of a new
 						//	response?  I.e. after a redirect
@@ -266,6 +301,7 @@
 							//	Clear all previously parsed
 							//	headers
 							$response->headers=array();
+							$header_len=0;
 							
 							//	Fill in status and version number
 							//	information
@@ -298,10 +334,12 @@
 					
 						$ex=$e;
 						
-						//	We need to return something other than
-						//	what was passed in to signal an error
-						//	to cURL
-						return ($len===0) ? 1 : 0;
+						//	We guarantee above that zero-length
+						//	headers will not get through, therefore
+						//	zero is guaranteed to be different from
+						//	$len, and therefore this will trigger
+						//	an error in libcurl
+						return 0;
 					
 					}
 					
@@ -316,14 +354,30 @@
 			//	body
 			$this->set(
 				CURLOPT_WRITEFUNCTION,
-				function ($curl, $str) use ($response) {
+				function ($curl, $str) use ($request, $response, &$ex) {
+				
+					//	We use ASCII strlen because we want
+					//	the length in bytes, not code points
+					$len=strlen($str);
+				
+					//	Would this be too long?
+					if (
+						!is_null($request->max_body_bytes) &&
+						((strlen($response->body)+$len)>$request->max_body_bytes)
+					) {
+					
+						$ex=new \Exception('Response too long');
+					
+						return 0;
+						
+					}
 				
 					//	Append
 					$response->body.=$str;
 					
 					//	Return exactly the length of the string
 					//	we were passed
-					return strlen($str);
+					return $len;
 				
 				}
 			);
