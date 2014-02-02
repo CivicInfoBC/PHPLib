@@ -50,6 +50,7 @@
 				),
 				'Accept-language' => 'en-CA'
 			);
+			$this->user_agent='CivicInfoBC Canada Post REST API Client';
 			$this->request->max_header_bytes=65536;
 			$this->request->max_body_bytes=65536;
 		
