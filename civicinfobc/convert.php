@@ -21,11 +21,7 @@
 			
 			}
 			
-			if (is_bool($obj)) {
-			
-				return $obj ? 1 : 0;
-			
-			}
+			if (is_bool($obj)) return $obj ? 1 : 0;
 			
 			if (
 				is_numeric($obj) &&
