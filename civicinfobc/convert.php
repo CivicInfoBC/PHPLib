@@ -129,6 +129,75 @@
 			return $retr;
 		
 		}
+		
+		
+		private static function date_time_is_error (array $arr) {
+		
+			return !(($arr['warning_count']===0) && ($arr['error_count']===0));
+		
+		}
+		
+		
+		public static function ToDateTime ($str, $format, $default=null) {
+		
+			return (
+				(($retr=\DateTime::createFromFormat($format,$str))===false) ||
+				self::date_time_is_error(\DateTime::getLastErrors())
+			) ? $default : $retr;
+		
+		}
+		
+		
+		private static function get_date_time_error ($prefix, array $arr, $curr='') {
+		
+			foreach ($arr as $char=>$msg) {
+			
+				if ($curr!=='') $curr.='; ';
+				$curr.=sprintf(
+					'%s: %s at offset %s',
+					$prefix,
+					$msg,
+					$char
+				);
+			
+			}
+			
+			return $curr;
+		
+		}
+		
+		
+		public static function ToDateTimeOrThrow ($str, $format) {
+		
+			$retr=\DateTime::createFromFormat($format,$str);
+			
+			$arr=\DateTime::getLastErrors();
+			
+			if (!(
+				($retr===false) ||
+				self::date_time_is_error($arr)
+			)) return $retr;
+			
+			//	ERROR
+			
+			$str=sprintf(
+				'"%s" could not be converted to a DateTime with format string "%s"',
+				$str,
+				$format
+			);
+			$errors=self::get_date_time_error(
+				'ERROR',
+				$arr['errors'],
+				self::get_date_time_error(
+					'WARNING',
+					$arr['warnings']
+				)
+			);
+			if ($errors!=='') $str.=': '.$errors;
+			
+			throw new \Exception($str);
+		
+		}
 	
 	
 	}
