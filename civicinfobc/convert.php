@@ -78,6 +78,57 @@
 			return $retr;
 		
 		}
+		
+		
+		public static function ToBoolean ($obj, $default=null) {
+		
+			if (is_bool($obj)) return $obj;
+		
+			if (is_float($obj)) {
+			
+				if ($obj===0.0) return false;
+				if ($obj===1.0) return true;
+				
+				return null;
+			
+			}
+			
+			if (is_integer($obj)) {
+			
+				if ($obj===0) return false;
+				if ($obj===1) return true;
+				
+				return null;
+			
+			}
+			
+			if (Regex::IsMatch(
+				'/^\\s*(?:t(?:rue)?|y(?:es)?)\\s*$/ui',
+				$obj
+			)) return true;
+			
+			if (Regex::IsMatch(
+				'/^\\s*(?:f(?:alse)?|no?)\\s*$/ui',
+				$obj
+			)) return false;
+			
+			return null;
+		
+		}
+		
+		
+		public static function ToBooleanOrThrow ($obj) {
+		
+			if (is_null($retr=self::ToBoolean($obj))) throw new \Exception(
+				sprintf(
+					'%s cannot be converted to a boolean value',
+					$obj
+				)
+			);
+			
+			return $retr;
+		
+		}
 	
 	
 	}
