@@ -57,7 +57,7 @@
 			//	Attempt to select a character
 			//	set
 			//
-			//	Not that in order for real_escape_string
+			//	Note that in order for real_escape_string
 			//	to be secure, THIS MUST BE CALLED
 			//	AT LEAST ONCE:
 			//
@@ -72,7 +72,7 @@
 			//	A REASON (because utf8mb4 is preferable, but requires
 			//	a new-ish version of MySQL), and I throw when ALL
 			//	the set_charset calls fail FOR A REASON, I don't need
-			//	PHPs warning.
+			//	PHP's warning.
 			foreach (self::$charsets as $x) if (@$this->mysqli->set_charset($x)) {
 			
 				$set_charset=true;
