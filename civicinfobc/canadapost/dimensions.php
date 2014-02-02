@@ -31,9 +31,16 @@
 		
 		public function __construct ($length, $width, $height) {
 		
-			$this->length=$length;
-			$this->width=$width;
-			$this->height=$height;
+			//	Canada Post has a special definition for
+			//	"length", "width", and "height", we ensure
+			//	that's reflected in the way we populate
+			//	this class
+			$arr=array($length,$width,$height);
+			rsort($arr);
+			
+			$this->length=$arr[0];
+			$this->width=$arr[1];
+			$this->height=$arr[2];
 		
 		}
 		
