@@ -123,7 +123,15 @@
 		
 		public function GetResponse (\DOMDocument $response) {
 		
+			//	There may be one or many quotes, create
+			//	an array to hold them
+			$retr=array();
 			
+			$root=new \CivicInfoBC\DOMWrapper($response);
+			$quotes=new \CivicInfoBC\DOMWrapper($root->{'price-quotes'},'price-quote');
+			foreach ($quotes as $quote) $retr[]=Quote::FromXML($quote);
+			
+			return $retr;
 		
 		}
 	
