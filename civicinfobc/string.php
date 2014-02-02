@@ -76,7 +76,7 @@
 					?	(
 							is_null($normal_form)
 								?	\Normalizer::normalize($string)
-								:	\Nomralizer::normalize($string,$normal_form)
+								:	\Normalizer::normalize($string,$normal_form)
 						)
 					:	(string)$string
 			);
