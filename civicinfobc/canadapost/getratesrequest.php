@@ -69,8 +69,10 @@
 			//	Create the document and root
 			//	element
 			$doc=new \DOMDocument('1.0','utf-8');
-			$root=$doc->createElementNS('http://www.canadapost.ca/ws/ship/rate-v2','mailing-scenario');
-			$doc->appendChild($root);
+			$doc->appendChild($root=$doc->createElementNS(
+				'http://www.canadapost.ca/ws/ship/rate-v2',
+				'mailing-scenario'
+			));
 			
 			//	Add customer number & contract ID
 			//	if applicable
