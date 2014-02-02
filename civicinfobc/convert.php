@@ -49,6 +49,35 @@
 			return $retr;
 		
 		}
+		
+		
+		public static function ToFloat ($obj, $default=null) {
+		
+			if (is_float($obj)) return $obj;
+		
+			if (is_integer($obj)) return floatval($obj);
+			
+			if (is_bool($obj)) return floatval($obj ? 1 : 0);
+			
+			if (is_numeric($obj)) return floatval($obj);
+			
+			return $default;
+		
+		}
+		
+		
+		public static function ToFloatOrThrow ($obj) {
+		
+			if (is_null($retr=self::ToFloat($obj))) throw new \Exception(
+				sprintf(
+					'%s cannot be converted to a floating point value',
+					$obj
+				)
+			);
+			
+			return $retr;
+		
+		}
 	
 	
 	}
