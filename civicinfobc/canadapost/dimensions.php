@@ -29,6 +29,20 @@
 		public $height;
 		
 		
+		/**
+		 *	Creates a new Dimensions object.
+		 *
+		 *	If the parameters are not passed in the
+		 *	order the Canada Post XML API expects them,
+		 *	they will automatically be reordered.
+		 *
+		 *	\param [in] $length
+		 *		The length.
+		 *	\param [in] $width
+		 *		The width.
+		 *	\param [in] $height
+		 *		The height.
+		 */
 		public function __construct ($length, $width, $height) {
 		
 			//	Canada Post has a special definition for
