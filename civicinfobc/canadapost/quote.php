@@ -43,8 +43,7 @@
 		
 			$node=new \CivicInfoBC\DOMWrapper($node);
 			
-			$retr=new Quote();
-			
+			$retr=new self();
 			$retr->service=$node->{'service-code'}->textContent;
 			$retr->link=Endpoint::FromXML($node->{'service-link'});
 			$retr->service_name=$node->{'service-name'}->textContent;
