@@ -331,6 +331,104 @@
 			);
 		
 		}
+		
+		
+		/**
+		 *	Converts a string from one arbitrary encoding
+		 *	to another arbitrary encoding.
+		 *
+		 *	\param [in] $string
+		 *		The string to convert.  If this string is
+		 *		not encoded as specified by \em from, the
+		 *		behaviour of this function will be erratic.
+		 *	\param [in] $to
+		 *		The encoding to which to convert \em string.
+		 *	\param [in] $from
+		 *		The current encoding of \em string.
+		 *
+		 *	\return
+		 *		\em string encoded with the encoding specified
+		 *		by \em to.
+		 */
+		public static function Convert ($string, $to, $from) {
+		
+			if (function_exists('mb_convert_encoding')) return mb_convert_encoding(
+				$string,
+				$to,
+				$from
+			);
+			
+			throw new \Exception('mb_convert_encoding unavailable');
+		
+		}
+		
+		
+		/**
+		 *	Converts a string from UTF-8 to some other
+		 *	encoding.
+		 *
+		 *	\param [in] $string
+		 *		The string to convert.
+		 *	\param [in] $encoding
+		 *		The target encoding.
+		 *
+		 *	\return
+		 *		\em string encoded with \em encoding.
+		 */
+		public static function ConvertTo ($string, $encoding) {
+		
+			return self::Convert($string,$encoding,'utf-8');
+		
+		}
+		
+		
+		/**
+		 *	Converts a string from an arbitrary encoding
+		 *	to UTF-8.
+		 *
+		 *	\param [in] $string
+		 *		The string to convert.  If this string
+		 *		is not encoded as specified by \em encoding,
+		 *		the behaviour of this function will be
+		 *		erratic.
+		 *	\param [in] $encoding
+		 *		The current encoding of \em string.
+		 *
+		 *	\return
+		 *		The UTF-8 encoding of \em string.
+		 */
+		public static function ConvertFrom ($string, $encoding) {
+		
+			return self::Convert($string,'utf-8',$encoding);
+		
+		}
+		
+		
+		/**
+		 *	Determines if the current platform supports
+		 *	all multi-byte string operations.
+		 *
+		 *	This requires that the PHP mbstring and intl
+		 *	extensions be installed and enabled.
+		 *
+		 *	\return
+		 *		\em true if all Unicode operations this
+		 *		class provides are supported on this
+		 *		platform, \em false otherwise.
+		 */
+		public static function IsMultiByte () {
+		
+			return (
+				function_exists('mb_internal_encoding') &&
+				function_exists('mb_strtoupper') &&
+				function_exists('mb_strtolower') &&
+				class_exists('Normalizer') &&
+				function_exists('mb_strlen') &&
+				class_exists('Collator') &&
+				function_exists('mb_convert_encoding')
+			);
+		
+		}
 	
 	
 	}
