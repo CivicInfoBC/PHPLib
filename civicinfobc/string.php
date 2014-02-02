@@ -4,6 +4,9 @@
 	namespace CivicInfoBC;
 	
 	
+	if (function_exists('mb_internal_encoding')) mb_internal_encoding('utf-8');
+	
+	
 	/**
 	 *	Contains utilities for safely working
 	 *	with strings.
@@ -73,7 +76,7 @@
 					?	(
 							is_null($normal_form)
 								?	\Normalizer::normalize($string)
-								:	\Nomralizer::normalize($string,$normal_form)
+								:	\Normalizer::normalize($string,$normal_form)
 						)
 					:	(string)$string
 			);
