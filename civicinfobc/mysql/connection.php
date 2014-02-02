@@ -86,6 +86,14 @@
 		}
 		
 		
+		public function __destruct () {
+		
+			//	Close the connection
+			$this->mysqli->close();
+		
+		}
+		
+		
 		/**
 		 *	Escapes a value for use in a MySQL
 		 *	query.

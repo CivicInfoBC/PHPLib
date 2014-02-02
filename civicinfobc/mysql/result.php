@@ -134,6 +134,15 @@
 		}
 		
 		
+		public function __destruct () {
+		
+			//	Free memory associated with
+			//	the result object
+			$this->result->free();
+		
+		}
+		
+		
 		public function current () {
 		
 			return $this->curr;
