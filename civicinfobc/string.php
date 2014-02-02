@@ -402,6 +402,33 @@
 			return self::Convert($string,'utf-8',$encoding);
 		
 		}
+		
+		
+		/**
+		 *	Determines if the current platform supports
+		 *	all multi-byte string operations.
+		 *
+		 *	This requires that the PHP mbstring and intl
+		 *	extensions be installed and enabled.
+		 *
+		 *	\return
+		 *		\em true if all Unicode operations this
+		 *		class provides are supported on this
+		 *		platform, \em false otherwise.
+		 */
+		public static function IsMultiByte () {
+		
+			return (
+				function_exists('mb_internal_encoding') &&
+				function_exists('mb_strtoupper') &&
+				function_exists('mb_strtolower') &&
+				class_exists('Normalizer') &&
+				function_exists('mb_strlen') &&
+				class_exists('Collator') &&
+				function_exists('mb_convert_encoding')
+			);
+		
+		}
 	
 	
 	}
