@@ -29,11 +29,32 @@
 		public $height;
 		
 		
+		/**
+		 *	Creates a new Dimensions object.
+		 *
+		 *	If the parameters are not passed in the
+		 *	order the Canada Post XML API expects them,
+		 *	they will automatically be reordered.
+		 *
+		 *	\param [in] $length
+		 *		The length.
+		 *	\param [in] $width
+		 *		The width.
+		 *	\param [in] $height
+		 *		The height.
+		 */
 		public function __construct ($length, $width, $height) {
 		
-			$this->length=$length;
-			$this->width=$width;
-			$this->height=$height;
+			//	Canada Post has a special definition for
+			//	"length", "width", and "height", we ensure
+			//	that's reflected in the way we populate
+			//	this class
+			$arr=array($length,$width,$height);
+			rsort($arr);
+			
+			$this->length=$arr[0];
+			$this->width=$arr[1];
+			$this->height=$arr[2];
 		
 		}
 		
