@@ -59,7 +59,19 @@
 		
 		private static function replace_impl ($pattern, $replacement, $subject, $callback) {
 		
-			$retr=$callback ? preg_replace_callback($pattern,$replacement,$subject) : preg_replace($pattern,$replacement,$subject);
+			$retr=Error::Wrap(function () use ($pattern, $replacement, $subject, $callback) {
+			
+				return $callback ? preg_replace_callback(
+					$pattern,
+					$replacement,
+					$subject
+				) : preg_replace(
+					$pattern,
+					$replacement,
+					$subject
+				);
+				
+			});
 			
 			self::check();
 			
@@ -84,7 +96,11 @@
 		
 		public static function IsMatch ($pattern, $subject) {
 		
-			$num=preg_match($pattern,$subject);
+			$num=Error::Wrap(function () use ($pattern, $subject) {
+			
+				return preg_match($pattern,$subject);
+			
+			});
 			
 			self::check();
 			
@@ -95,7 +111,12 @@
 		
 		public static function Match ($pattern, $subject) {
 		
-			$num=preg_match($pattern,$subject,$match);
+			$match=null;
+			$num=Error::Wrap(function () use ($pattern, $subject, &$match) {
+			
+				return preg_match($pattern,$subject,$match);
+			
+			});
 			
 			self::check();
 			
@@ -106,7 +127,11 @@
 		
 		public static function Count ($pattern, $subject) {
 		
-			$num=preg_match_all($pattern,$subject);
+			$num=Error::Wrap(function () use ($pattern, $subject) {
+			
+				return preg_match_all($pattern,$subject,$ignored,PREG_SET_ORDER);
+			
+			});
 			
 			self::check();
 			
@@ -117,7 +142,12 @@
 		
 		public static function Matches ($pattern, $subject) {
 		
-			$num=preg_match_all($pattern,$subject,$matches);
+			$matches=null;
+			$num=Error::Wrap(function () use ($pattern, $subject, &$matches) {
+			
+				return preg_match_all($pattern,$subject,$matches,PREG_SET_ORDER);
+			
+			});
 			
 			self::check();
 			
@@ -128,7 +158,11 @@
 		
 		public static function Split ($pattern, $subject) {
 		
-			$retr=preg_split($pattern,$subject);
+			$retr=Error::Wrap(function () use ($pattern, $subject) {
+			
+				return preg_split($pattern,$subject);
+			
+			});
 			
 			self::check();
 			
