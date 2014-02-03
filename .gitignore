@@ -1,3 +1,5 @@
-/*
-!.gitignore
-!civicinfobc/
+*.bat
+/*.php
+!/test.php
+/templates/*
+!/templates/*test*
