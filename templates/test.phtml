@@ -1,0 +1,79 @@
+<?php
+
+
+	use \CivicInfoBC\HTML as HTML;
+	
+	
+	$arr=$this->results;
+	$results=array_shift($arr);
+	$this->results=$arr;
+	
+	
+?>
+
+
+<h2><?php	HTML::Write($results->name);	?></h2>
+
+
+<table>
+
+
+	<thead>
+	
+	
+		<tr>
+		
+			<td>Name</td>
+			<td>Description</td>
+			<td>Result</td>
+		
+		</tr>
+	
+	
+	</thead>
+	
+	
+	<tbody>
+	
+	
+		<?php
+		
+			$success=0;
+			foreach ($results->results as $result):
+				if ($result->success) ++$success;
+		
+		?>
+		
+		<tr>
+		
+			<td><?php	HTML::Write($result->name);	?></td>
+			<td><?php	HTML::Write($result->description);	?></td>
+			<td class="<?php	HTML::Write($result->success ? 'success' : 'failure');	?>"><?php
+				HTML::Write($result->success ? 'Success' : 'Failed');
+			?></td>
+		
+		</tr>
+		
+		<?php	endforeach;	?>
+	
+	
+	</tbody>
+
+
+</table>
+
+
+<h3>
+
+	<strong>Total:</strong> <?php	HTML::Write(count($results->results));	?>
+	<strong>Succeeded:</strong> <?php	HTML::Write($success);	?> (<?php
+		HTML::Write(
+			sprintf(
+				'%.2f',
+				(count($results->results)===0) ? 100 : ((floatval($success)/floatval(count($results->results)))*100)
+			),
+			'%'
+		);
+	?>)
+	
+</h3>
