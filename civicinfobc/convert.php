@@ -15,7 +15,7 @@
 			
 				$i=intval($obj);
 				
-				if (floatval($x)===$obj) return $i;
+				if (floatval($i)===$obj) return $i;
 				
 				return $default;
 			
