@@ -54,6 +54,17 @@
 			$retr->name=$this->name;
 			$retr->description=$this->desc;
 			
+			$ex=null;
+			set_error_handler(function ($errno, $errstr) use (&$ex) {
+			
+				if (error_reporting()===0) return false;
+			
+				$ex=new \Exception($errstr,$errno);
+				
+				return true;
+			
+			});
+			
 			try {
 			
 				$callback=$this->callback;
@@ -64,6 +75,15 @@
 			
 				$retr->result=$e;
 				$retr->success=$this->throws;
+			
+			}
+			
+			restore_error_handler();
+			
+			if (!is_null($ex)) {
+			
+				$retr->result=$ex;
+				$retr->success=false;
 			
 			}
 			
