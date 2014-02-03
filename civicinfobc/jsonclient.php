@@ -105,11 +105,12 @@
 			//	Check to make sure the response is good
 			$this->check($response);
 			
-			//	If there's no body, return null
-			if ($response->body==='') return null;
+			//	Fetch/decode the body, and if there's
+			//	no body, return null
+			if (($body=$response->GetBody())==='') return null;
 			
-			//	Otherwise decode JSON
-			return JSON::Decode($response->body,$depth);
+			//	Decode JSON
+			return JSON::Decode($body,$depth);
 		
 		}
 		

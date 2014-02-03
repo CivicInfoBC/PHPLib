@@ -193,8 +193,8 @@
 			//	If nothing was returned, return null,
 			//	otherwise use the request object to
 			//	extract meaning from the response
-			return ($response->body==='') ? null : $request->GetResponse(
-				\CivicInfoBC\XML::Load($response->body)
+			return (($body=$response->GetBody())==='') ? null : $request->GetResponse(
+				\CivicInfoBC\XML::Load($body)
 			);
 		
 		}

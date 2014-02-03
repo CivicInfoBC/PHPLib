@@ -41,6 +41,48 @@
 		 *	The body of the response.
 		 */
 		public $body='';
+		
+		
+		private function get_encoding () {
+		
+			//	Loop over headers and attempt to find
+			//	the Content-Type header
+			foreach ($this->headers as $key=>$value) if (\CivicInfoBC\String::ToLower($key)==='content-type') {
+			
+				//	Attempt to extract the character set
+				if (is_null($match=\CivicInfoBC\Regex::Match(
+					'/(?:^|\\s|;)charset\\s*\\=\\s*(\\S+)(?:$|\\s)/ui',
+					$value
+				))) break;
+				
+				//	Character set found, return it
+				return $match[1];
+			
+			}
+			
+			//	Default to UTF-8
+			return 'utf-8';
+		
+		}
+		
+		
+		/**
+		 *	Retrieves the body of the response, properly
+		 *	converted according to the character set specified
+		 *	in the content-type header (if any).
+		 *
+		 *	\return
+		 *		The body of the response as a properly-encoded
+		 *		string.
+		 */
+		public function GetBody () {
+		
+			return \CivicInfoBC\String::ConvertFrom(
+				$this->body,
+				$this->get_encoding()
+			);
+		
+		}
 	
 	
 	}
