@@ -52,12 +52,13 @@
 		 */
 		public static function MakeQueryString ($args) {
 		
+			$retr='';
 			$first=true;
 			foreach ($args as $key=>$value) {
 			
 				if ($first) {
 				
-					$retr='?';
+					$retr.='?';
 					
 					$first=false;
 				
