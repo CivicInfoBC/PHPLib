@@ -49,6 +49,10 @@
 		 */
 		public static function Random ($count, $raw=false) {
 		
+			//	If no bytes were requested, return
+			//	nothing
+			if ($count===0) return '';
+		
 			//	Attempt to open /dev/urandom for
 			//	Linux
 			if (($file=@fopen('/dev/urandom','rb'))!==false) {
