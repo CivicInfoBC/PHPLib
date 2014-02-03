@@ -178,7 +178,7 @@
 			$args=func_get_args();
 			unset($args[0]);
 			$ref=new \ReflectionClass($info->controller);
-			return call_user_func_array(array($ref,'newInstance'),$args);
+			return $ref->newInstanceArgs($args);
 		
 		}
 	
