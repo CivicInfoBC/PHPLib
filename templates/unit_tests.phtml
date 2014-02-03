@@ -140,6 +140,20 @@
 	
 	
 		<h1>PHPLib Unit Test Results</h1>
+		
+		
+		<h3>
+			<strong>Total:</strong> <?php	HTML::Write($this->total);	?>
+			<strong>Succeeded:</strong> <?php	HTML::Write($this->success);	?> (<?php
+				HTML::Write(
+					sprintf(
+						'%.2f',
+						($this->total===0) ? 100 : ((floatval($this->success)/floatval($this->total))*100)
+					),
+					'%'
+				);
+			?>)
+		</h3>
 	
 	
 		<?php	$this->Next();	?>

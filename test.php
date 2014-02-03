@@ -33,7 +33,17 @@
 	
 	//	Get results
 	$results=array();
-	foreach ($suites as $suite) $results[]=$suite->Execute();
+	$success=0;
+	$total=0;
+	foreach ($suites as $suite) {
+	
+		$result=$suite->Execute();
+		$total+=count($result->results);
+		foreach ($result->results as $r) if ($r->success) ++$success;
+	
+		$results[]=$result;
+		
+	}
 	
 	
 	//	Sort the results
@@ -43,6 +53,8 @@
 	//	Prepare and render a template
 	$template=new \CivicInfoBC\Template('./templates');
 	$template->results=$results;
+	$template->success=$success;
+	$template->total=$total;
 	$template->Add('unit_tests.phtml');
 	foreach ($results as $x) $template->Add('test.phtml');
 	$template->Render();
