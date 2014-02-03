@@ -1,0 +1,151 @@
+<?php
+
+
+	use \CivicInfoBC\Links as Links;
+	use \CivicInfoBC\HTML as HTML;
+
+
+	header('Content-Type:text/html;charset=utf-8');
+
+	
+?><!doctype html>
+
+
+<html>
+
+
+	<head>
+	
+	
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	
+	
+		<title>CivicInfoBC PHPLib Unit Test Results</title>
+		
+		
+		<link rel="stylesheet"  type="text/css" href="<?php
+			HTML::Write(Links::ToSSL('http://www.civicinfo.bc.ca/style/reset.css'));
+		?>" />
+		<style type="text/css">
+		
+		
+			body {
+			
+				font-family: Helvetica, sans-serif;
+				font-size: 12pt;
+			
+			}
+			
+			
+			body > * {
+			
+				margin-bottom: 10px;
+			
+			}
+			
+			
+			body > *:first-child {
+			
+				margin-top: 10px;
+			
+			}
+			
+			
+			h1 {
+			
+				font-size: 35pt;
+				font-weight: bold;
+				text-align: center;
+			
+			}
+		
+		
+			h2 {
+			
+				font-size: 28pt;
+				font-weight: bold;
+				text-align: center;
+			
+			}
+			
+			
+			h3 {
+			
+				font-size: 16pt;
+				text-align: center;
+			
+			}
+			
+			
+			strong {
+			
+				font-weight: bold;
+			
+			}
+			
+			
+			table {
+			
+				margin-left: auto;
+				margin-right: auto;
+			
+			}
+			
+			
+			thead {
+			
+				font-size: 18pt;
+				font-weight: bold;
+				text-align: center;
+			
+			}
+			
+			
+			td {
+			
+				border: 1px black solid;
+				padding: 3px;
+			
+			}
+			
+			
+			td.failure, td.success {
+			
+				text-align: center;
+			
+			}
+			
+			
+			td.failure {
+			
+				background-color: red;
+			
+			}
+			
+			
+			td.success {
+			
+				background-color: lightgreen;
+			
+			}
+		
+		
+		</style>
+	
+	
+	</head>
+	
+	
+	<body>
+	
+	
+		<h1>PHPLib Unit Test Results</h1>
+	
+	
+		<?php	$this->Next();	?>
+	
+	
+	</body>
+
+
+</html>
