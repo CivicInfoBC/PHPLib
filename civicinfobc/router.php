@@ -56,13 +56,6 @@
 		
 		private static function get_components ($uri) {
 		
-			if (is_null($uri)) {
-			
-				if (isset($_SERVER['HTTP_X_ORIGINAL_URL'])) $uri=$_SERVER['HTTP_X_ORIGINAL_URL'];
-				else $uri=$_SERVER['REQUEST_URI'];
-			
-			}
-			
 			$arr=Regex::Split(
 				'/\\//u',
 				Regex::Replace(
@@ -71,7 +64,7 @@
 					Regex::Replace(
 						'/\\/$/u',
 						'',
-						$uri
+						is_null($uri) ? Server::GetPath() : $uri
 					)
 				)
 			);
