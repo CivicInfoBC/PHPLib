@@ -74,6 +74,32 @@
 			return $obj;
 		
 		}
+		
+		
+		/**
+		 *	Sends JSON.
+		 *
+		 *	\param [in] $json
+		 *		The object to serialize to JSON.
+		 *	\param [in] $headers
+		 *		If \em true the function should set the
+		 *		HTTP \"Content-Type\" header to specify
+		 *		that the response is JSON.  Defaults to
+		 *		\em true.
+		 */
+		public static function Send ($json, $headers=true) {
+		
+			//	Attempt to get JSON to send first,
+			//	so that we haven't committed to sending
+			//	headers if this function throws
+			$text=self::Encode($json);
+			
+			//	Send header (if requested)
+			if ($headers) header('Content-Type: application/json; charset=utf-8');
+			//	Send JSON
+			echo($text);
+		
+		}
 	
 	
 	}
