@@ -59,7 +59,7 @@
 		
 		private static function raise_no_error_messages (\CivicInfoBC\HTTP\Response $response) {
 		
-			throw new \Exception(
+			throw new Exception(
 				sprintf(
 					'Canada Post reported error (HTTP status code %s), but returned no error messages',
 					$response->status
@@ -71,7 +71,7 @@
 		
 		private static function raise_invalid_error_message (\CivicInfoBC\HTTP\Response $response) {
 		
-			throw new \Exception(
+			throw new Exception(
 				sprintf(
 					'Canada Post reported error (HTTP status code %s), but returned invalid error message structure',
 					$response->status
@@ -136,7 +136,7 @@
 			if ($first) self::raise_no_error_messages($response);
 			
 			//	THROW
-			throw new \Exception($message);
+			throw new Exception($message);
 		
 		}
 		
