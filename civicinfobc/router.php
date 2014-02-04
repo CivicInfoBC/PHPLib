@@ -146,7 +146,7 @@
 			) {
 			
 				//	Can we try the default?
-				if ($tried_default) throw new HTTPStatus(HTTPStatus::NOT_FOUND);
+				if ($tried_default) throw new HTTP\Status(HTTP\Status::NOT_FOUND);
 				
 				//	YES
 				
@@ -171,7 +171,7 @@
 					$info->controller,
 					$this->base
 				)
-			)) throw new HTTPStatus(HTTPStatus::NOT_FOUND);
+			)) throw new HTTP\Status(HTTP\Status::NOT_FOUND);
 			
 			//	The controller is good, create
 			//	one
