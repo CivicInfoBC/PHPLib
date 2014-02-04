@@ -152,7 +152,7 @@
 			
 			} else if ($port!==80) $retr.=':80';
 			
-			return $retr.self::GetPath();
+			return $retr;
 		
 		}
 	
