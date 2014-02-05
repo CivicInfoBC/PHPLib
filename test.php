@@ -8,27 +8,51 @@
 	require_once('./civicinfobc/init.php');
 	
 	
-	//	Load test suites
-	$suites=array();
-	$dir=new \DirectoryIterator('./tests');
-	foreach ($dir as $file) {
+	//	Loads test suites
+	function load_suites ($path, $namespace, array &$arr) {
 	
-		if (!(
-			$file->isFile() &&
-			String::Equals(
-				String::ToLower($file->getExtension()),
-				'php'
-			) &&
-			class_exists($class_name='\\Tests\\'.$file->getBasename(
-				'.'.$file->getExtension()
-			)) &&
-			is_subclass_of($class_name,'\\CivicInfoBC\\Testing\\TestSuite')
-		)) continue;
+		$dir=new \DirectoryIterator($path);
+		foreach ($dir as $x) {
 		
-		$ref=new \ReflectionClass($class_name);
-		$suites[]=$ref->newInstance();
+			if (
+				($x->getFilename()==='.') ||
+				($x->getFilename()==='..')
+			) continue;
+		
+			if ($x->isDir()) {
+			
+				load_suites(
+					\CivicInfoBC\Path::Join($path,$x->getFilename()),
+					$namespace.'\\'.$x->getFilename(),
+					$arr
+				);
+				
+				continue;
+			
+			}
+			
+			if (!(
+				$x->isFile() &&
+				String::Equals(
+					String::ToLower($x->getExtension()),
+					'php'
+				) &&
+				class_exists($class_name=$namespace.'\\'.$x->getBasename(
+					'.'.$x->getExtension()
+				)) &&
+				is_subclass_of($class_name,'\\CivicInfoBC\\Testing\\TestSuite')
+			)) continue;
+			
+			$ref=new \ReflectionClass($class_name);
+			$arr[]=$ref->newInstance();
+		
+		}
 	
 	}
+	
+	
+	$suites=array();
+	load_suites('./tests','\\Tests',$suites);
 	
 	
 	//	Get results
