@@ -47,21 +47,19 @@
 		
 			//	Loop over headers and attempt to find
 			//	the Content-Type header
+			$charset=null;
 			foreach ($this->headers as $key=>$value) if (\CivicInfoBC\String::ToLower($key)==='content-type') {
 			
-				//	Attempt to extract the character set
-				if (is_null($match=\CivicInfoBC\Regex::Match(
-					'/(?:^|\\s|;)charset\\s*\\=\\s*(\\S+)(?:$|\\s)/ui',
-					$value
-				))) break;
+				//	Parse
+				$parser=new ContentType($value);
+				$charset=$parser->charset;
 				
-				//	Character set found, return it
-				return $match[1];
+				break;
 			
 			}
 			
-			//	Default to UTF-8
-			return 'utf-8';
+			//	Default to UTf-8
+			return is_null($charset) ? 'utf-8' : $charset;
 		
 		}
 		
