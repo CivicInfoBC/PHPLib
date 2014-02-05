@@ -36,7 +36,7 @@
 		 *		\em true if this request is a POST,
 		 *		\em false otherwise.
 		 */
-		public function IsPost () {
+		public static function IsPost () {
 		
 			return Server::Get('REQUEST_METHOD')==='POST';
 		
