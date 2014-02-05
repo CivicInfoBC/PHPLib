@@ -11,6 +11,17 @@
 	class Convert extends \CivicInfoBC\Testing\TestSuite {
 	
 	
+		public static function date_time ($str, $expect_success, $throwing=false) {
+		
+			$dt=$throwing ? C::ToDateTimeOrThrow($str,'Y-m-d') : C::ToDateTime($str,'Y-m-d');
+			if (is_null($dt)) return !$expect_success;
+			if (!$expect_success) return false;
+			
+			return $dt->format('Y-m-d')===$str;
+		
+		}
+	
+	
 		public function __construct () {
 		
 			parent::__construct('Conversion Utilities');
@@ -121,6 +132,111 @@
 					'Float (throwing, failure)',
 					'ToFloatOrThrow throws on failure',
 					function () {	C::ToFloatOrThrow('hello');	},
+					true
+				),
+				new T(
+					'Boolean (identity)',
+					'ToBoolean leaves booleans untouched',
+					function () {	return (C::ToBoolean(true)===true) && (C::ToBoolean(false)===false);	}
+				),
+				new T(
+					'Boolean (integer, success)',
+					'ToBoolean accepts integers with a lossless boolean representation (i.e. 0 and 1)',
+					function () {	return (C::ToBoolean(1)===true) && (C::ToBoolean(0)===false);	}
+				),
+				new T(
+					'Boolean (integer, failure)',
+					'ToBoolean rejects integers without a lossless boolean representation',
+					function () {	return is_null(C::ToBoolean(5));	}
+				),
+				new T(
+					'Boolean (floating point, success)',
+					'ToBoolean accepts floating point values with a lossless boolean representation (i.e. 0.0 and 1.0)',
+					function () {	return (C::ToBoolean(1.0)===true) && (C::ToBoolean(0.0)===false);	}
+				),
+				new T(
+					'Boolean (floating point, failure)',
+					'ToBoolean rejects floating point values without a lossless boolean representation',
+					function () {	return is_null(C::ToBoolean(5.5));	}
+				),
+				new T(
+					'Boolean (string, success)',
+					'ToBoolean accepts strings that represent boolean values (i.e. "true", "false", "yes", "no", et cetera)',
+					function () {
+					
+						return (
+							(C::ToBoolean('true')===true) &&
+							(C::ToBoolean('false')===false) &&
+							(C::ToBoolean('t')===true) &&
+							(C::ToBoolean('f')===false) &&
+							(C::ToBoolean('TRUE')===true) &&
+							(C::ToBoolean('FALSE')===false) &&
+							(C::ToBoolean('T')===true) &&
+							(C::ToBoolean('F')===false) &&
+							(C::ToBoolean('yes')===true) &&
+							(C::ToBoolean('no')===false) &&
+							(C::ToBoolean('y')===true) &&
+							(C::ToBoolean('n')===false) &&
+							(C::ToBoolean('YES')===true) &&
+							(C::ToBoolean('NO')===false) &&
+							(C::ToBoolean('Y')===true) &&
+							(C::ToBoolean('N')===false)
+						);
+					
+					}
+				),
+				new T(
+					'Boolean (string, success, whitespace)',
+					'ToBoolean accepts strings that represent a boolean value despite leading and/or trailing whitespace',
+					function () {	return C::ToBoolean('     true     ')===true;	}
+				),
+				new T(
+					'Boolean (string, almost success)',
+					'ToBoolean rejects strings even if they have a representation of a boolean value as a substring',
+					function () {	return is_null(C::ToBoolean('that\'s true'));	}
+				),
+				new T(
+					'Boolean (string, failure)',
+					'ToBoolean rejects string which do not represent a boolean value',
+					function () {	return is_null(C::ToBoolean('baby bears'));	}
+				),
+				new T(
+					'Boolean (throwing, success)',
+					'ToBooleanOrThrow returns a boolean on success',
+					function () {	return C::ToBooleanOrThrow('true')===true;	}
+				),
+				new T(
+					'Boolean (throwing, failure)',
+					'ToBooleanOrThrow throws on failure',
+					function () {	C::ToBooleanOrThrow('falsey');	},
+					true
+				),
+				new T(
+					'DateTime (success)',
+					'ToDateTime returns an appropriate DateTime object on success',
+					function () {	return Convert::date_time('2014-02-04',true);	}
+				),
+				new T(
+					'DateTime (failure)',
+					'ToDateTime rejects strings that do not contain a date and a time, or which do not contain one according to its format',
+					function () {
+					
+						return (
+							Convert::date_time('hello world',false) &&
+							Convert::date_time('2014-99-99',false)
+						);
+					
+					}
+				),
+				new T(
+					'DateTime (throwing, success)',
+					'ToDateTimeOrThrow returns a DateTime on success',
+					function () {	return Convert::date_time('2014-02-04',true,true);	}
+				),
+				new T(
+					'DateTime (throwing, failure)',
+					'ToDateTimeorThrow throws on failure',
+					function () {	Convert::date_time('hello world',false,true);	},
 					true
 				)
 			);
