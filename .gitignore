@@ -1,5 +1,6 @@
 *.bat
 /*.php
 !/test.php
+!/*_test*
 /templates/*
 !/templates/*test*
