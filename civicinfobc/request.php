@@ -15,17 +15,17 @@
 		 *	A StrictObject containing all query
 		 *	string keys.
 		 */
-		static $get;
+		public static $get;
 		/**
 		 *	A StrictObject containing all POST
 		 *	variables.
 		 */
-		static $post;
+		public static $post;
 		/**
 		 *	A StrictObject containirg all cookie
 		 *	variables.
 		 */
-		static $cookie;
+		public static $cookie;
 		
 		
 		/**
