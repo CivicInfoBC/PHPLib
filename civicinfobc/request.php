@@ -22,6 +22,11 @@
 		 */
 		public static $post;
 		/**
+		 *	A StrictObject containing all server
+		 *	variables.
+		 */
+		public static $server;
+		/**
 		 *	A StrictObject containirg all cookie
 		 *	variables.
 		 */
@@ -38,7 +43,7 @@
 		 */
 		public static function IsPost () {
 		
-			return Server::Get('REQUEST_METHOD')==='POST';
+			return self::$server->Get('REQUEST_METHOD')==='POST';
 		
 		}
 	
@@ -48,6 +53,7 @@
 	
 	Request::$get=new StrictObject($_GET);
 	Request::$post=new StrictObject($_POST);
+	Request::$server=new StrictObject($_SERVER);
 	Request::$cookie=new StrictObject($_COOKIE);
 
 
