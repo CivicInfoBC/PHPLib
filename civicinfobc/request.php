@@ -46,6 +46,43 @@
 			return self::$server->Get('REQUEST_METHOD')==='POST';
 		
 		}
+		
+		
+		/**
+		 *	Gets all HTTP headers sent with this
+		 *	request.
+		 *
+		 *	As HTTP headers are case insensitive,
+		 *	they will all be transformed to lower
+		 *	case before being returned.
+		 *
+		 *	\return
+		 *		A StrictObject representing the
+		 *		HTTP headers for this request.
+		 */
+		public static function GetHeaders () {
+			
+			$retr=array();
+			foreach (self::$server as $key=>$value) {
+			
+				if (is_null($match=Regex::Match(
+					'/^HTTP_(.*)$/u',
+					$key
+				))) continue;
+				
+				$retr[String::ToLower(
+					Regex::Replace(
+						'/_/u',
+						'-',
+						$match[1]
+					)
+				)]=$value;
+			
+			}
+			
+			return new StrictObject($retr);
+		
+		}
 	
 	
 	}
