@@ -83,6 +83,26 @@
 			return new StrictObject($retr);
 		
 		}
+		
+		
+		/**
+		 *	Gets the body of this request.
+		 *
+		 *	\return
+		 *		A string containing the body of this
+		 *		request.
+		 */
+		public static function GetBody () {
+		
+			//	Get the body of the request as a string,
+			//	but what encoding is it in?
+			if (($retr=Error::Wrap(function () {	return file_get_contents('php://input');	}))===false) Error::Raise();
+			
+			//	Convert to UTF-8
+			$content_type=new HTTP\ContentType(null,null,'utf-8');
+			return String::ConvertFrom($retr,$content_type->charset);
+		
+		}
 	
 	
 	}
