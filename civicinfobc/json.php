@@ -86,13 +86,18 @@
 		 *		HTTP \"Content-Type\" header to specify
 		 *		that the response is JSON.  Defaults to
 		 *		\em true.
+		 *	\param [in] $depth
+		 *		Specifies the maximum depth to which
+		 *		the encoder will recurse while encoding
+		 *		\em json.  If \em null a sensible default
+		 *		will be chosen.  Defaults to \em null.
 		 */
-		public static function Send ($json, $headers=true) {
+		public static function Send ($json, $headers=true, $depth=null) {
 		
 			//	Attempt to get JSON to send first,
 			//	so that we haven't committed to sending
 			//	headers if this function throws
-			$text=self::Encode($json);
+			$text=self::Encode($json,$depth);
 			
 			//	Send header (if requested)
 			if ($headers) header('Content-Type: application/json; charset=utf-8');
