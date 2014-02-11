@@ -31,7 +31,7 @@
 		
 		private function escape ($name) {
 		
-			return '`'.Regex::Replace(
+			return '`'.\CivicInfoBC\Regex::Replace(
 				'/`/u',
 				'``',
 				$name
