@@ -226,7 +226,7 @@
 		 *
 		 *	\param [in] $table_name
 		 *		The name of the table to insert into.
-		 *	\param [in] $values
+		 *	\param [in] $obj
 		 *		An object which may be iterated to obtain
 		 *		the key/value mapping for the values to be
 		 *		inserted.
@@ -236,12 +236,12 @@
 		 *		table-in-question uses an automatically
 		 *		generated key.
 		 */
-		public function Insert ($table_name, $values) {
+		public function Insert ($table_name, $obj) {
 		
 			//	Build keys and values
 			$keys='';
 			$values='';
-			foreach ($values as $key=>$value) {
+			foreach ($obj as $key=>$value) {
 			
 				if ($keys!=='') {
 				
