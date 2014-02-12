@@ -24,6 +24,13 @@
 		}
 		
 		
+		public function ToArray () {
+		
+			return $this->arr;
+		
+		}
+		
+		
 		private function retrieve ($key) {
 		
 			return isset($this->arr[$key]) ? $this->arr[$key] : null;
