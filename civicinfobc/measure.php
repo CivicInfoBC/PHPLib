@@ -38,6 +38,15 @@
 		protected static $conversion_table=array();
 		
 		
+		private static function check ($unit) {
+		
+			if (!isset(static::$conversion_table[$unit])) throw new \InvalidArgumentException(
+				'No conversion factor specified for the provided unit'
+			);
+		
+		}
+		
+		
 		/**
 		 *	Initializes this base class.
 		 *
@@ -51,6 +60,8 @@
 		public function __construct ($quantity, $unit) {
 		
 			$this->quantity=Convert::ToFloat($quantity);
+			
+			self::check($unit);
 			$this->unit=$unit;
 		
 		}
@@ -58,10 +69,7 @@
 		
 		private static function get ($unit) {
 		
-			if (!isset(static::$conversion_table[$unit])) throw new \InvalidArgumentException(
-				'No conversion factor specified for the provided unit'
-			);
-			
+			self::check($unit);
 			return floatval(static::$conversion_table[$unit]);
 		
 		}
