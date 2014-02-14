@@ -41,6 +41,20 @@
 					'g',
 					'mass'
 				),
+				new UnitInfo(
+					array(
+						'litre',
+						'liter'
+					),
+					array(
+						'litres',
+						'liters'
+					),
+					'l',
+					'volume',
+					1.0,
+					true
+				),
 				//	FPS
 				new UnitInfo(
 					'pound',
@@ -53,12 +67,37 @@
 					'mass',
 					453.59237,
 					true
-				)/*,
+				),
+				new UnitInfo(
+					'foot',
+					'feet',
+					array(
+						'ft',
+						'′'
+					),
+					'length',
+					0.3048,
+					true
+				),
+				//	Other
 				new UnitInfo(
 					'inch',
-					'inches'
-				)*/
-				//	Other
+					'inches',
+					array(
+						'in',
+						'″'
+					),
+					'length',
+					0.0254,
+					true
+				),
+				new UnitInfo(
+					'mile',
+					'miles',
+					array(),
+					'length',
+					1609.344
+				)
 			);
 		
 		}
