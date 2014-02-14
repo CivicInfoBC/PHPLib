@@ -8,15 +8,15 @@
 	
 	
 		public $name;
-		public $height;
 		public $weight;
+		public $height;
 		
 		
-		public function __construct ($name, $height, $weight) {
+		public function __construct ($name, \CivicInfoBC\Measure $weight, \CivicInfoBC\Measure $height) {
 		
 			$this->name=$name;
-			$this->height=$height;
 			$this->weight=$weight;
+			$this->height=$height;
 		
 		}
 	
