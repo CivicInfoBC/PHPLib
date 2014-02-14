@@ -17,6 +17,11 @@
 		 */
 		public $names;
 		/**
+		 *	An array containing the plural forms of
+		 *	the names of this unit of measure.
+		 */
+		public $plural;
+		/**
 		 *	An array containing the symbols for
 		 *	this unit of measure.
 		 */
@@ -30,13 +35,30 @@
 		 *	A factor, encapsulating how many of the
 		 *	base SI unit this unit represents.
 		 */
-		public $factor;
+		public $factors;
 		/**
 		 *	A boolean value indicating whether or not
 		 *	symbols for this unit should be matched
 		 *	case insensitively.
 		 */
 		public $symbols_ignore_case;
+		
+		
+		private static function coalesce ($arr, $empty=true) {
+		
+			if (is_array($arr)) {
+			
+				if (!$empty && (count($arr)===0)) throw new \InvalidArgumentException(
+					'Unexpected empty array'
+				);
+				
+				return $arr;
+			
+			}
+			
+			return array($arr);
+		
+		}
 		
 		
 		/**
@@ -53,7 +75,7 @@
 		 *	\param [in] $quantities
 		 *		The quantity this unit measures, or
 		 *		an array containing all such quantities.
-		 *	\param [in] $factor
+		 *	\param [in] $factors
 		 *		The number of the base SI unit that
 		 *		this unit represents.  Optional.  Defaults
 		 *		to 1.0.
@@ -62,20 +84,17 @@
 		 *		be matched case insensitively, \em false
 		 *		otherwise.  Defaults to \em false.
 		 */
-		public function __construct ($names, $symbols, $quantities, $factor=1.0, $symbols_ignore_case=false) {
+		public function __construct ($names, $plural, $symbols, $quantities, $factors=1.0, $symbols_ignore_case=false) {
 		
-			if (!is_array($names)) $names=array($names);
-			$this->names=$names;
-		
-			if (!is_array($symbols)) $symbols=array($symbols);
-			$this->symbols=$symbols;
-			
-			if (!is_array($quantities)) $quantities=array($quantities);
-			$this->quantities=$quantities;
-			
-			$this->factor=$factor;
-			
-			$this->symbols_ignore_case=false;
+			$this->names=self::coalesce($names,false);
+			$this->plural=self::coalesce($plural);
+			$this->symbols=self::coalesce($symbols);
+			$this->quantities=self::coalesce($quantities,false);
+			$this->factors=self::coalesce($factors,false);
+			if (count($this->quantities)!==count($this->factors)) throw new \InvalidArgumentException(
+				'There must be one factor per quantity measured'
+			);
+			$this->symbols_ignore_case=$symbols_ignore_case;
 		
 		}
 		
@@ -118,8 +137,12 @@
 		
 			return ArrayUtil::In(
 				$this->names,
-				String::Trim($name),
-				String::GetComparer(true)
+				$name=String::Trim($name),
+				$comparer=String::GetComparer(true)
+			) || ArrayUtil::In(
+				$this->plural,
+				$name,
+				$comparer
 			);
 		
 		}
@@ -176,7 +199,96 @@
 		 */
 		public function IsSI () {
 		
-			return $this->factor===1.0;
+			return ArrayUtil::In(
+				$this->factors,
+				1.0
+			);
+		
+		}
+		
+		
+		/**
+		 *	Gets the factor for converting this
+		 *	unit with respect to some quantity.
+		 *
+		 *	\param [in] $quantity
+		 *		The quantity for which the factor
+		 *		shall be retrieved.  May be
+		 *		\em null in which case the first
+		 *		factor is retrieved.  Defaults to
+		 *		\em null.
+		 *
+		 *	\return
+		 *		The conversion factor.
+		 */
+		public function GetFactor ($quantity=null) {
+		
+			return $this->factors[
+				is_null($quantity) ? 0 : ArrayUtil::Find(
+					$this->quantities,
+					String::Trim($quantity),
+					true,
+					String::GetComparer(true)
+				)
+			];
+			
+		}
+		
+		
+		/**
+		 *	Gets a name for this unit.
+		 *
+		 *	\param [in] $plural
+		 *		Optional.  If \em true the
+		 *		plural form of this unit's name
+		 *		will be retrieved.  Defauls
+		 *		to \em false.
+		 *
+		 *	\return
+		 *		A name for this unit.
+		 */
+		public function GetName ($plural=false) {
+		
+			if (
+				$plural &&
+				(count($this->plural)!==0)
+			) return $this->plural[0];
+			
+			return $this->names[0];
+		
+		}
+		
+		
+		/**
+		 *	Gets a symbol for this unit.
+		 *
+		 *	\param [in] $throw
+		 *		If \em true this method will
+		 *		throw if this unit has no
+		 *		symbols, otherwise \em null
+		 *		will simply be returned if
+		 *		there are no symbols.  Defaults
+		 *		to \em true.
+		 *
+		 *	\return
+		 *		A symbol for this unit.
+		 */
+		public function GetSymbol ($throw=true) {
+		
+			if (count($this->symbols)===0) {
+			
+				if ($throw) throw new NotFoundException(
+					sprintf(
+						'Unit "%s" has no associated symbols',
+						$this->GetName()
+					)
+				);
+				
+				return null;
+			
+			}
+		
+			return $this->symbols[0];
 		
 		}
 	
