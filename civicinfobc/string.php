@@ -96,9 +96,44 @@
 		 *		\em true if \em a and \em b should be
 		 *		treated as equal, \em false otherwise.
 		 */
-		public static function Equals ($a, $b) {
+		public static function Equals ($a, $b, $ignore_case=false) {
 		
-			return self::Normalize($a)===self::Normalize($b);
+			if ($ignore_case) {
+			
+				$a=self::ToLower($a);
+				$b=self::ToLower($b);
+			
+			}
+		
+			$a=self::Normalize($a);
+			$b=self::Normalize($b);
+			
+			return $a===$b;
+		
+		}
+		
+		
+		/**
+		 *	Fetches a callback which may be used to
+		 *	compare two strings for equality.
+		 *
+		 *	\param [in] $ignore_case
+		 *		If \em true the returned callback will
+		 *		ignore case when comparing strings.
+		 *		Defaults to \em false.
+		 *
+		 *	\return
+		 *		A callback which accepts two arguments
+		 *		and returns \em true if they're Unicode
+		 *		equivalent, \em false otherwise.
+		 */
+		public static function GetComparer ($ignore_case=false) {
+		
+			return function ($a, $b) use ($ignore_case) {
+			
+				return String::Equals($a,$b,$ignore_case);
+			
+			};
 		
 		}
 		

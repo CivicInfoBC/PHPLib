@@ -7,7 +7,7 @@
 	/**
 	 *	Represents the dimensions of a parcel.
 	 *
-	 *	All units in centimeters.
+	 *	All units in centimeters if numeric.
 	 */
 	class Dimensions {
 	
@@ -45,32 +45,53 @@
 		 */
 		public function __construct ($length, $width, $height) {
 		
-			//	Canada Post has a special definition for
-			//	"length", "width", and "height", we ensure
-			//	that's reflected in the way we populate
-			//	this class
-			$arr=array($length,$width,$height);
-			rsort($arr);
-			
-			$this->length=$arr[0];
-			$this->width=$arr[1];
-			$this->height=$arr[2];
+			$this->length=$length;
+			$this->width=$width;
+			$this->height=$height;
 		
 		}
 		
 		
-		private function get_float ($flt) {
+		private static function get_float ($flt) {
 		
-			if (!is_numeric($flt)) throw new \Exception('Value not numeric');
-			
-			$flt=floatval($flt);
+			$flt=\CivicInfoBC\Convert::ToFloatOrThrow($flt);
 			
 			if (
 				($flt<0) ||
 				($flt>=1000)
-			) throw new \Exception('Value out of range');
+			) throw new \InvalidArgumentException('Value out of range');
 			
-			return sprintf('%5.3f',$flt);
+			return sprintf('%3.1f',$flt);
+		
+		}
+		
+		
+		private static function to_measure (array $arr) {
+		
+			$retr=array();
+			
+			foreach ($arr as $x) {
+			
+				$retr[]=($x instanceof \CivicInfoBC\Measure) ? $x->To('cm')->quantity : $x;
+			
+			}
+			
+			sort($retr);
+			
+			return $retr;
+		
+		}
+		
+		
+		private function to_array () {
+		
+			return self::to_measure(
+				array(
+					$this->length,
+					$this->width,
+					$this->height
+				)
+			);
 		
 		}
 		
@@ -81,9 +102,11 @@
 			
 			$node->appendChild($dim=$doc->createElement('dimensions'));
 			
-			$dim->appendChild($doc->createElement('length',self::get_float($this->length)));
-			$dim->appendChild($doc->createElement('width',self::get_float($this->width)));
-			$dim->appendChild($doc->createElement('height',self::get_float($this->height)));
+			$arr=$this->to_array();
+			
+			$dim->appendChild($doc->createElement('height',self::get_float($arr[0])));
+			$dim->appendChild($doc->createElement('width',self::get_float($arr[1])));
+			$dim->appendChild($doc->createElement('length',self::get_float($arr[2])));
 		
 		}
 	

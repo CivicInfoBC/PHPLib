@@ -11,7 +11,8 @@
 	
 	
 		/**
-		 *	The weight of the parcel in
+		 *	The weight of the parcel.
+		 *	If numeric, is assumed to be in
 		 *	kilograms.
 		 */
 		public $weight;
@@ -45,13 +46,36 @@
 		}
 		
 		
+		private static function get_float ($flt) {
+		
+			$flt=\CivicInfoBC\Convert::ToFloatOrThrow($flt);
+			
+			if (
+				($flt<0) ||
+				($flt>=100)
+			) throw new \InvalidArgumentException('Value out of range');
+			
+			return sprintf('%2.3f',$flt);
+		
+		}
+		
+		
 		public function Get (\DOMNode $node) {
 		
 			$doc=$node->ownerDocument;
 		
 			$node->appendChild($root=$doc->createElement('parcel-characteristics'));
 			
-			$root->appendChild($doc->createElement('weight',$this->weight));
+			$root->appendChild(
+				$doc->createElement(
+					'weight',
+					self::get_float(
+						($this->weight instanceof \CivicInfoBC\Measure)
+							?	$this->weight->To('kg')->quantity
+							:	$this->weight
+					)
+				)
+			);
 			
 			//	If the dimensions aren't null, we
 			//	get them as XML.
@@ -60,7 +84,7 @@
 			//	the oversized field
 			if (is_null($this->dimensions)) $root->appendChild($doc->createElement(
 				'oversized',
-				self::get_bool($this->dimensions)
+				self::get_bool($this->oversized)
 			));
 			else $this->dimensions->Get($root);
 			
