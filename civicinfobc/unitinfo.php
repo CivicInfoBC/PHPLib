@@ -30,12 +30,12 @@
 		 *	An array containing the quantities this
 		 *	unit of measure may be used to measure.
 		 */
-		public $quantities;
+		public $quantity;
 		/**
 		 *	A factor, encapsulating how many of the
 		 *	base SI unit this unit represents.
 		 */
-		public $factors;
+		public $factor;
 		/**
 		 *	A boolean value indicating whether or not
 		 *	symbols for this unit should be matched
@@ -84,16 +84,13 @@
 		 *		be matched case insensitively, \em false
 		 *		otherwise.  Defaults to \em false.
 		 */
-		public function __construct ($names, $plural, $symbols, $quantities, $factors=1.0, $symbols_ignore_case=false) {
+		public function __construct ($names, $plural, $symbols, $quantity, $factor=1.0, $symbols_ignore_case=false) {
 		
 			$this->names=self::coalesce($names,false);
 			$this->plural=self::coalesce($plural);
 			$this->symbols=self::coalesce($symbols);
-			$this->quantities=self::coalesce($quantities,false);
-			$this->factors=self::coalesce($factors,false);
-			if (count($this->quantities)!==count($this->factors)) throw new \InvalidArgumentException(
-				'There must be one factor per quantity measured'
-			);
+			$this->quantity=$quantity;
+			$this->factor=$factor;
 			$this->symbols_ignore_case=$symbols_ignore_case;
 		
 		}
@@ -180,11 +177,7 @@
 		 */
 		public function DoesMeasure ($quantity) {
 		
-			return ArrayUtil::In(
-				$this->quantities,
-				String::Trim($quantity),
-				String::GetComparer(true)
-			);
+			return String::Equals($this->quantity,$quantity,true);
 		
 		}
 		
@@ -199,39 +192,8 @@
 		 */
 		public function IsSI () {
 		
-			return ArrayUtil::In(
-				$this->factors,
-				1.0
-			);
+			return $this->factor===1.0;
 		
-		}
-		
-		
-		/**
-		 *	Gets the factor for converting this
-		 *	unit with respect to some quantity.
-		 *
-		 *	\param [in] $quantity
-		 *		The quantity for which the factor
-		 *		shall be retrieved.  May be
-		 *		\em null in which case the first
-		 *		factor is retrieved.  Defaults to
-		 *		\em null.
-		 *
-		 *	\return
-		 *		The conversion factor.
-		 */
-		public function GetFactor ($quantity=null) {
-		
-			return $this->factors[
-				is_null($quantity) ? 0 : ArrayUtil::Find(
-					$this->quantities,
-					String::Trim($quantity),
-					true,
-					String::GetComparer(true)
-				)
-			];
-			
 		}
 		
 		
