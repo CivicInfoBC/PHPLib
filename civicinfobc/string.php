@@ -96,9 +96,19 @@
 		 *		\em true if \em a and \em b should be
 		 *		treated as equal, \em false otherwise.
 		 */
-		public static function Equals ($a, $b) {
+		public static function Equals ($a, $b, $ignore_case=false) {
 		
-			return self::Normalize($a)===self::Normalize($b);
+			if ($ignore_case) {
+			
+				$a=self::ToLower($a);
+				$b=self::ToLower($b);
+			
+			}
+		
+			$a=self::Normalize($a);
+			$b=self::Normalize($b);
+			
+			return $a===$b;
 		
 		}
 		
@@ -119,16 +129,9 @@
 		 */
 		public static function GetComparer ($ignore_case=false) {
 		
-			return $ignore_case ? function ($a, $b) {
-				
-				return String::Equals(
-					String::ToLower($a),
-					String::ToLower($b)
-				);
-				
-			} : function ($a, $b) {
+			return function ($a, $b) use ($ignore_case) {
 			
-				return String::Equals($a,$b);
+				return String::Equals($a,$b,$ignore_case);
 			
 			};
 		
