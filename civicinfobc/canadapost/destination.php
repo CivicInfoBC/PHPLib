@@ -59,7 +59,7 @@
 		public function __construct ($type, $code) {
 		
 			$this->type=$type;
-			$this->code=$code;
+			$this->code=($code instanceof \CivicInfoBC\PostalCode) ? $code : new \CivicInfoBC\PostalCode($code);
 		
 		}
 		
