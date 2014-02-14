@@ -47,10 +47,11 @@
 					'pounds',
 					array(
 						'lbs',
-						'lb'
+						'lb',
+						'lbm'
 					),
-					'length',
-					2.2046226218487758072297380134503,
+					'mass',
+					453.59237,
 					true
 				)/*,
 				new UnitInfo(
