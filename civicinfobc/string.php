@@ -104,6 +104,38 @@
 		
 		
 		/**
+		 *	Fetches a callback which may be used to
+		 *	compare two strings for equality.
+		 *
+		 *	\param [in] $ignore_case
+		 *		If \em true the returned callback will
+		 *		ignore case when comparing strings.
+		 *		Defaults to \em false.
+		 *
+		 *	\return
+		 *		A callback which accepts two arguments
+		 *		and returns \em true if they're Unicode
+		 *		equivalent, \em false otherwise.
+		 */
+		public static function GetComparer ($ignore_case=false) {
+		
+			return $ignore_case ? function ($a, $b) {
+				
+				return String::Equals(
+					String::ToLower($a),
+					String::ToLower($b)
+				);
+				
+			} : function ($a, $b) {
+			
+				return String::Equals($a,$b);
+			
+			};
+		
+		}
+		
+		
+		/**
 		 *	Determines the number of code points in
 		 *	a string.
 		 *
