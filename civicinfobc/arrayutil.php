@@ -12,6 +12,26 @@
 	
 	
 		/**
+		 *	Coalesces a value to an array.
+		 *
+		 *	If the value is not an array, a new array
+		 *	containing it as the only element will be
+		 *	created and returned.
+		 *
+		 *	\param [in] $arr
+		 *		The array or value.
+		 *
+		 *	\return
+		 *		The coalesced value.
+		 */
+		public static function Coalesce ($arr) {
+		
+			return is_array($arr) ? $arr : array($arr);
+		
+		}
+		
+		
+		/**
 		 *	Checks an array to see if it contains
 		 *	some element.
 		 *
@@ -31,7 +51,7 @@
 		 */
 		public static function In ($arr, $what, $comparer=null) {
 		
-			if (!is_array($arr)) $arr=array($arr);
+			$arr=self::Coalesce($arr);
 		
 			if (is_null($comparer)) return in_array($what,$arr,true);
 			
