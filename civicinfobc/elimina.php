@@ -44,11 +44,13 @@
 			self::$map=array(
 				'minute_taking' => new EliMina\Item(
 					'Mina\'s Guide to Minute Taking',
+					25.0,
 					self::measure('0.183kg'),
 					self::measure('0.25 inches')
 				),
 				'boardroom_problems' => new EliMina\Item(
 					'101 Board Room Problems',
+					30.0,
 					self::measure('0.341kg'),
 					self::measure('0.5 inches')
 				)
