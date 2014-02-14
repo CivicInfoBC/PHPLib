@@ -16,6 +16,10 @@
 		 */
 		public $name;
 		/**
+		 *	The cost of this container.
+		 */
+		public $cost;
+		/**
 		 *	The dimensions of this container for
 		 *	use in shipping calculations.
 		 */
@@ -43,6 +47,7 @@
 		
 		public function __construct (
 			$name,
+			$cost,
 			$max,
 			\CivicInfoBC\CanadaPost\Dimensions $dimensions,
 			\CivicInfoBC\Measure $height=null,
@@ -50,6 +55,7 @@
 		) {
 		
 			$this->name=$name;
+			$this->cost=$cost;
 			$this->max=$max;
 			$this->dimensions=$dimensions;
 			$this->height=$height;
