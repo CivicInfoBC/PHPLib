@@ -220,6 +220,80 @@
 			);
 		
 		}
+		
+		
+		/**
+		 *	Compares this measure to another measure.
+		 *
+		 *	\param [in] $other
+		 *		The measure with which to compare this
+		 *		measure.
+		 *
+		 *	\return
+		 *		0 if both measures represent the same
+		 *		measurement.  A value below 0 if this
+		 *		measure represents a smaller measurement
+		 *		than \em other.  A positive value
+		 *		otherwise.
+		 */
+		public function Compare (Measure $other) {
+		
+			$other=$other->To($this->unit);
+			
+			if ($other->quantity===$this->quantity) return 0;
+			
+			if ($this->quantity<$other->quantity) return -1;
+			
+			return 1;
+		
+		}
+		
+		
+		/**
+		 *	Adds this measure to another measure.
+		 *
+		 *	\param [in] $other
+		 *		The measure to add to this measure.
+		 *
+		 *	\return
+		 *		A new measure which is the result of
+		 *		adding the two measures.  The new
+		 *		measure is in the units of this
+		 *		measure.
+		 */
+		public function Add (Measure $other) {
+		
+			$other=$other->To($this->unit);
+			
+			$retr=clone $this;
+			
+			$retr->quantity+=$other->quantity;
+			
+			return $retr;
+		
+		}
+		
+		
+		/**
+		 *	Multiplies this measure by some amount.
+		 *
+		 *	\param [in] $factor
+		 *		The factor by which to multiply this
+		 *		measure.
+		 *
+		 *	\return
+		 *		A new measure which is the result of
+		 *		multiplying this measure by \em factor.
+		 */
+		public function Multiply ($factor) {
+		
+			$retr=clone $this;
+			
+			$retr->quantity*=$factor;
+			
+			return $retr;
+		
+		}
 	
 	
 	}
