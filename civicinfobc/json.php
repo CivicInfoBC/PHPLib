@@ -11,11 +11,11 @@
 	class JSON {
 	
 	
-		private static function raise () {
+		private static function check () {
 		
-			throw new \Exception(
+			if (($code=json_last_error())!==JSON_ERROR_NONE) throw new JSONException(
 				json_last_error_msg(),
-				json_last_error()
+				$code
 			);
 		
 		}
@@ -34,10 +34,9 @@
 		 */
 		public static function Encode ($data, $depth=null) {
 		
-			if (($json=is_null($depth)
-				?	json_encode($data)
-				:	json_encode($data,0,$depth)
-			)===false) self::raise();
+			$json=is_null($depth) ? json_encode($data) : json_encode($data,0,$depth);
+			
+			self::check();
 			
 			return $json;
 		
@@ -57,19 +56,9 @@
 		 */
 		public static function Decode ($json, $depth=null) {
 		
-			//	Is the string literally "null"?
-			//
-			//	If it is, json_decode will return
-			//	null, but null is supposed to be
-			//	interpreted as an error
-			//
-			//	http://www.reddit.com/r/lolphp
-			if (strtolower(String::Trim($json))==='null') return null;
-		
-			if (is_null($obj=is_null($depth)
-				?	json_decode($json)
-				:	json_decode($json,false,$depth)
-			)) self::raise();
+			$obj=is_null($depth) ? json_decode($json) : json_decode($json,false,$depth);
+			
+			self::check();
 			
 			return $obj;
 		
