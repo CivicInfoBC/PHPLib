@@ -5,8 +5,8 @@
 	
 	
 	/**
-	 *	Encapsulates the functionality needed to
-	 *	drive the Eli Mina book sale form.
+	 *	Encapsulates an order placed on the
+	 *	Eli Mina book sale form.
 	 */
 	class EliMina {
 	
@@ -120,37 +120,44 @@
 		 *	\endcond
 		 */
 		 
-		 
+		
+		private $kv;
+		private $order;
+		private $details;
+		
+		
+		public function __construct ($kv) {
+		
+			$this->kv=new \CivicInfoBC\KeyValueWrapper($kv);
+		
+		}
+		
+		
 		/**
 		 *	Retrieves an array of EliMina\\ItemOrder
-		 *	objects representing a certain order.
-		 *
-		 *	\param [in] $kv
-		 *		An object which maps keys to values
-		 *		where the keys given the encoded
-		 *		titles of the books, and the values
-		 *		give the quantity of each book.
+		 *	objects representing this order.
 		 *
 		 *	\return
 		 *		An array of EliMina\\ItemOrder objects
-		 *		representing the order encapsulated by
-		 *		\em kv.
+		 *		representing this order.
 		 */
-		public static function GetOrder ($kv) {
+		public function GetOrder () {
 		
-			$kv=new \CivicInfoBC\KeyValueWrapper($kv);
+			if (is_null($this->order)) {
 			
-			$retr=array();
-			foreach (self::$map as $key=>$value) {
-			
-				if (isset($kv->$key)) $retr[]=new EliMina\ItemOrder(
-					$value,
-					Convert::ToIntegerOrThrow($kv->$key)
-				);
+				$this->order=array();
+				foreach (self::$map as $key=>$value) {
+				
+					if (isset($this->kv->$key)) $this->order[]=new EliMina\ItemOrder(
+						$value,
+						\CivicInfoBC\Convert::ToIntegerOrThrow($this->kv->$key)
+					);
+				
+				}
 			
 			}
 			
-			return $retr;
+			return $this->order;
 		
 		}
 		
@@ -168,61 +175,148 @@
 		
 		
 		/**
-		 *	Attempts to pack a certain order in one of
+		 *	Attempts to pack this order in one of
 		 *	the available containers.
-		 *
-		 *	\param [in] $order
-		 *		An array of EliMina\\ItemOrder objects
-		 *		representing the order to pack.
 		 *
 		 *	\return
 		 *		An EliMina\\PackingDetails object
 		 *		representing the result of packing
-		 *		\em order.
+		 *		this order.
 		 */
-		public static function Pack ($order) {
+		public function Pack () {
 		
-			$order=ArrayUtil::Coalesce($order);
+			if (is_null($this->details)) {
 		
-			//	Calculate the weight of the order,
-			//	how many items are in it, and it's
-			//	total height
-			
-			$weight=self::measure('0kg');
-			$total=0;
-			foreach ($order as $item) {
-			
-				if ($item->quantity>self::$max) self::too_many();
-				$total+=$item->quantity;
+				$order=$this->GetOrder();
 				
-				$weight=$weight->Add(
-					$item->item->weight->Multiply(
-						$item->quantity
-					)
+				//	Calculate the weight of the order,
+				//	how many items are in it, and it's
+				//	total height
+				
+				$weight=self::measure('0kg');
+				$total=0;
+				foreach ($order as $item) {
+				
+					if ($item->quantity>self::$max) self::too_many();
+					$total+=$item->quantity;
+					
+					$weight=$weight->Add(
+						$item->item->weight->Multiply(
+							$item->quantity
+						)
+					);
+				
+				}
+				
+				if ($total>self::$max) self::too_many();
+				
+				//	Try and find a container that will
+				//	fit this order
+				$container=null;
+				foreach (self::$containers as $c) {
+				
+					if (!is_null($container=$c->Get($order))) break;
+				
+				}
+				
+				if (is_null($container)) throw new \Exception(
+					'No container can hold this order'
 				);
-			
+				
+				$this->details=new EliMina\PackingDetails(
+					$total,
+					$weight,
+					$container
+				);
+				
 			}
 			
-			if ($total>self::$max) self::too_many();
+			return $this->details;
+		
+		}
+		
+		
+		public function GetRatesRequest () {
+		
+			return $this->Pack()->GetRatesRequest();
+		
+		}
+		
+		
+		private static function to_cost ($flt) {
+		
+			return round($flt,2);
+		
+		}
+		
+		
+		private function get_shipping (
+			\CivicInfoBC\CanadaPost\Client $client=null,
+			\CivicInfoBC\CanadaPost\GetRatesRequest $request=null
+		) {
+		
+			if (is_null($client) || is_null($request)) return 0.0;
 			
-			//	Try and find a container that will
-			//	fit this order
-			$container=null;
-			foreach (self::$containers as $c) {
+			$response=$client->Execute($request);
 			
-				if (!is_null($container=$c->Get($order))) break;
-			
-			}
-			
-			if (is_null($container)) throw new \Exception(
-				'No container can hold this order'
+			if (count($response)===0) throw new \Exception(
+				'Canada Post API didn\'t return any quotes'
 			);
 			
-			return new EliMina\PackingDetails(
-				$total,
-				$weight,
-				$container
+			//	Tack on a flat $5 as per Todd rather than
+			//	adding in the total cost of the packing
+			//
+			//	Is trivial to get the cost of the packing
+			//	if that's desired:
+			//
+			//	$this->Pack()->container->cost
+			return self::to_cost(
+				$response[0]->price_details->due+5
 			);
+		
+		}
+		
+		
+		/**
+		 *	Gets the pricing for this order.
+		 *
+		 *	\param [in] $tax_rate
+		 *		The sales tax rate.
+		 *	\param [in] $client
+		 *		A Canada Post XML API client.  Optional.
+		 *		Defaults to \em null.  If \em null shipping
+		 *		pricing will not be obtained.
+		 *	\param [in] $request
+		 *		A GetRatesRequest object encapsulating the
+		 *		details of shipping this order.  Optional.
+		 *		Defaults to \em null.  If \em null shipping
+		 *		pricing will not be obtained.
+		 *
+		 *	\return
+		 *		An EliMina\\Pricing object containing details
+		 *		of the pricing of this order.
+		 */
+		public function GetPricing (
+			$tax_rate,
+			\CivicInfoBC\CanadaPost\Client $client=null,
+			\CivicInfoBC\CanadaPost\GetRatesRequest $request=null
+		) {
+		
+			$retr=new EliMina\Pricing();
+			if ($this->Pack()->total===0) return $retr;
+			$retr->shipping=$this->get_shipping($client,$request);
+			$retr->subtotal=0.0;
+			foreach ($this->GetOrder() as $item) $retr->subtotal+=self::to_cost(
+				$item->item->cost*$item->quantity
+			);
+			$retr->tax=self::to_cost(
+				($retr->shipping+$retr->subtotal)*$tax_rate
+			);
+			$retr->total=self::to_cost(
+				$retr->shipping+$retr->subtotal+$retr->tax
+			);
+			
+			return $retr;
 		
 		}
 	
