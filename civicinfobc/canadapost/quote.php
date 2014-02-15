@@ -51,7 +51,7 @@
 			$weight_details=new \CivicInfoBC\DOMWrapper($node->{'weight-details'});
 			if (!is_null(
 				$cubed_weight=$weight_details->GetChild('cubed-weight')
-			)) $retr->cubed_weight=\CivicInfoBC\Convert::ToIntegerOrThrow($cubed_weight->textContent);
+			)) $retr->cubed_weight=\CivicInfoBC\Convert::ToFloatOrThrow($cubed_weight->textContent);
 			$retr->service_standard=ServiceStandard::FromXML($node->{'service-standard'});
 			
 			return $retr;
