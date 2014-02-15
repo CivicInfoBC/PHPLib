@@ -61,6 +61,7 @@
 				return true;
 			
 			});
+			$level=error_reporting(E_ALL|E_STRICT);
 			
 			try {
 			
@@ -69,12 +70,14 @@
 			} catch (\Exception $e) {
 			
 				restore_error_handler();
+				error_reporting($level);
 				
 				throw $e;
 			
 			}
 			
 			restore_error_handler();
+			error_reporting($level);
 			
 			if (!is_null($ex)) throw $ex;
 			
