@@ -26,6 +26,7 @@
 			<td>Name</td>
 			<td>Description</td>
 			<td>Result</td>
+			<td>Status</td>
 		
 		</tr>
 	
@@ -48,6 +49,38 @@
 		
 			<td><?php	HTML::Write($result->name);	?></td>
 			<td><?php	HTML::Write($result->description);	?></td>
+			<td><code><?php
+			
+				switch (gettype($result->result)) {
+				
+					case 'boolean':
+						HTML::Write($result->result ? 'true' : 'false');
+						break;
+					case 'string':
+						HTML::Write('"',$result->result,'"');
+						break;
+					case 'array':
+					case 'resource':
+					case 'unknown type':
+						HTML::Write(gettype($result->result));
+						break;
+					case 'NULL':
+						HTML::Write('null');
+						break;
+					case 'object':
+						HTML::Write(get_class($result->result));
+						break;
+					default:
+						HTML::Write($result->result);
+						break;
+				
+				}
+				
+			?></code><?php
+			
+				if ($result->result instanceof \Exception) HTML::Write(' - ',$result->result->getMessage());
+				
+			?></td>
 			<td class="<?php	HTML::Write($result->success ? 'success' : 'failure');	?>"><?php
 				HTML::Write($result->success ? 'Success' : 'Failed');
 			?></td>
