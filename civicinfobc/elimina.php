@@ -262,16 +262,9 @@
 			if (count($response)===0) throw new \Exception(
 				'Canada Post API didn\'t return any quotes'
 			);
-			
-			//	Tack on a flat $5 as per Todd rather than
-			//	adding in the total cost of the packing
-			//
-			//	Is trivial to get the cost of the packing
-			//	if that's desired:
-			//
-			//	$this->Pack()->container->cost
+
 			return self::to_cost(
-				$response[0]->price_details->due+5
+				$response[0]->price_details->due+$this->Pack()->container->cost
 			);
 		
 		}
