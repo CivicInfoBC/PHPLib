@@ -108,10 +108,10 @@
 	}
 	
 	
-	Request::$get=new StrictObject($_GET);
-	Request::$post=new StrictObject($_POST);
+	Request::$get=new InputObject($_GET);
+	Request::$post=new InputObject($_POST);
 	Request::$server=new StrictObject($_SERVER);
-	Request::$cookie=new StrictObject($_COOKIE);
+	Request::$cookie=new InputObject($_COOKIE);
 
 
 ?>
