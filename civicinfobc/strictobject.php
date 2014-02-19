@@ -69,7 +69,7 @@
 			
 			if (is_null($retr)) throw new \Exception(
 				sprintf(
-					'Request for unknown configuration "%s"',
+					'Request for unknown key "%s"',
 					$key
 				)
 			);
