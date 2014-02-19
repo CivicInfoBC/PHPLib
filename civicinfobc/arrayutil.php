@@ -100,8 +100,14 @@
 		public static function In ($arr, $what, $comparer=null) {
 		
 			$arr=self::Coalesce($arr);
-		
-			if (is_null($comparer)) return in_array($what,$arr,true);
+			
+			if (is_null($comparer)) $comparer=function ($a, $b) {
+			
+				if (is_string($a)) return is_string($b) ? String::Equals($a,$b) : false;
+				
+				return $a===$b;
+			
+			};
 			
 			foreach ($arr as $x) if ($comparer($x,$what)) return true;
 			
