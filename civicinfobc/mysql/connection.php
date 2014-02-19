@@ -49,7 +49,7 @@
 			);
 			
 			//	Check for a connection error
-			if (!is_null($this->mysqli->connect_error)) throw new \Exception(
+			if (!is_null($this->mysqli->connect_error)) throw new Exception(
 				$this->mysqli->connect_error,
 				$this->mysqli->connect_errno
 			);
@@ -81,7 +81,7 @@
 			
 			}
 			
-			if (!$set_charset) throw new \Exception('Failed to set MySQL character set');
+			if (!$set_charset) throw new Exception('Failed to set MySQL character set');
 		
 		}
 		
@@ -147,7 +147,7 @@
 					'sprintf',
 					$arr
 				)
-			))===false) throw new \Exception(
+			))===false) throw new Exception(
 				$this->mysqli->error,
 				$this->mysqli->errno
 			);
