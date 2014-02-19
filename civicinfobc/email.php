@@ -95,7 +95,7 @@
 			
 			if (!$found_content_type && $this->is_html) $headers.=self::get_header(
 				'Content-Type',
-				'text/html'
+				'text/html; charset=utf-8'
 			);
 			
 			return $headers;
