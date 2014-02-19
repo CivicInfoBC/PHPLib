@@ -26,6 +26,8 @@
 		 */
 		public static function Coalesce ($arr) {
 		
+			if (is_null($arr)) return array();
+		
 			return is_array($arr) ? $arr : array($arr);
 		
 		}
