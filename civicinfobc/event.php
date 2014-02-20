@@ -382,9 +382,7 @@
 		 *		to \em true.
 		 *
 		 *	\return
-		 *		The ID of the newly registered participant
-		 *		if the underlying table uses automatically
-		 *		generated IDs.
+		 *		The ID of the newly registered participant.
 		 */
 		public function Register ($obj, array $verify=array('firstname','lastname'), $case_insensitive=true) {
 		
