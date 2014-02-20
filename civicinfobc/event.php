@@ -337,9 +337,29 @@
 		
 		
 		/**
-		 *	
+		 *	When implemented in a derived class, allows
+		 *	the class to perform custom processing immediately
+		 *	before a registration occurs.
+		 *
+		 *	During this function's execution, an exclusive
+		 *	write lock will be held on the events database
+		 *	table through the events connection.
+		 *
+		 *	If registration should be aborted, an appropriate
+		 *	exception should be thrown.  This exception will be
+		 *	allowed to pass through.
+		 *
+		 *	Any value this function returns will be ignored.
+		 *
+		 *	The default implementation does nothing, and is
+		 *	provided so that derived classes do not necessarily
+		 *	have to implement this method.
+		 *
+		 *	\param [in] $obj
+		 *		The details of the registration which is being
+		 *		performed.
 		 */
-		protected function PreRegisterHook ($obj) {	}
+		protected function PreRegisterHook (KeyValueWrapper $obj) {	}
 		
 		
 		/**
@@ -410,6 +430,9 @@
 			if ($this->IsRegistered($arr,$case_insensitive)) throw new CouldNotRegister(
 				CouldNotRegister::ALREADY_REGISTERED
 			);
+			
+			//	Call the hook
+			$this->PreRegisterHook($kv);
 			
 			//	If the table isn't auto increment, we need
 			//	to find a unique ID for this row, unless
