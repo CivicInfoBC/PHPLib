@@ -497,6 +497,142 @@
 		}
 	
 	
+		/**
+		 *	Used for formatting registration details.
+		 *
+		 *	Defaults to an empty array.
+		 */
+		protected static $format_map=array();
+	
+	
+		/**
+		 *	Gets a format map for use by the Format
+		 *	method.
+		 *
+		 *	A map is an array which specifies how
+		 *	registration details should be formatted.
+		 *
+		 *	Integer keys give headings, string keys are
+		 *	taken to be a key in the registration details
+		 *	object.
+		 *
+		 *	If a specified key in the registration details
+		 *	object is set, a formatted entry will be emitted
+		 *	with the value associated with that key in this
+		 *	map is tha key, and the value provided by the
+		 *	registration details object as the value.
+		 *
+		 *	Entries will be processed in order.
+		 *
+		 *	A default implementation is provided which returns
+		 *	the static member \em format_map (late bound) for
+		 *	convenience.
+		 *
+		 *	\param [in] $obj
+		 *		The details of the registration which is
+		 *		being performed.
+		 *
+		 *	\return
+		 *		The map.
+		 */
+		protected function GetFormatMap (KeyValueWrapper $obj) {
+		
+			return static::$format_map;
+		
+		}
+	
+	
+		/**
+		 *	Performs custom processing on a value to be
+		 *	formatted.
+		 *
+		 *	A default implementation is provided which
+		 *	reformats all floating-point values as dollars.
+		 *
+		 *	\param [in] $key
+		 *		The key being processed.
+		 *	\param [in] $label
+		 *		The label from the format map which will
+		 *		be applied to this value.
+		 *	\param [in] $obj
+		 *		All key value pairs which make up the
+		 *		registration details.
+		 *
+		 *	\return
+		 *		\em false to skip this key.  \em null to
+		 *		process as per the default.  A string to
+		 *		substitute that value.
+		 */
+		protected function FormatFilter ($key, $label, KeyValueWrapper $obj) {
+		
+			if (is_float($obj->$key)) return sprintf(
+				'$%.2f',
+				round($obj->$key,2)
+			);
+		
+			return null;
+		
+		}
+	
+	
+		/**
+		 *	Formats registration details according
+		 *	to a map provided by the derived class
+		 *	and accessed using late static binding.
+		 *
+		 *	\param [in] $obj
+		 *		An object which may be iterated, the
+		 *		keys being keys in the map, the values
+		 *		being the desired values.
+		 *
+		 *	\return
+		 *		An array of both strings and KeyValuePair
+		 *		objects, where strings are headings, and
+		 *		KeyValuePair objects are formatted details.
+		 */
+		public function Format ($obj) {
+		
+			$kv=new KeyValueWrapper($obj);
+			
+			$retr=array();
+			$found=null;
+			foreach ($this->GetFormatMap($kv) as $key=>$value) {
+			
+				if (is_integer($key)) {
+				
+					$found=$value;
+					
+				} else if (isset($kv->$key)) {
+				
+					$result=$this->FormatFilter(
+						$key,
+						$value,
+						$kv
+					);
+					
+					if ($result===false) continue;
+				
+					if (!is_null($found)) {
+					
+						$retr[]=$found;
+						$found=null;
+					
+					}
+					
+					$retr[]=new KeyValuePair(
+						$value,
+						is_null($result) ? $kv->$key : $result
+					);
+				
+				}
+			
+			}
+			
+			return $retr;
+		
+		}
+	
+	
 	}
 
 
