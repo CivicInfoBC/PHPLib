@@ -633,6 +633,47 @@
 		}
 	
 	
+		protected static $payment_form_map=array(
+			'firstname' => 'first_name',
+			'lastname' => 'last_name',
+			'representing' => 'company',
+			'email',
+			'total' => 'amount',
+		);
+	
+	
+		public function GetPaymentForm (EXact\HostedCheckout $hco, $id, $obj) {
+		
+			//	Create the form
+			$form=new EXact\SingleItemForm($hco);
+		
+			//	Wrap the object/array/etc.
+			$kv=new KeyValueWrapper($obj);
+			
+			//	Get values
+			foreach (static::$payment_form_map as $o_key=>$e_key) {
+			
+				if (is_integer($o_key)) $o_key=$e_key;
+				
+				$form->$e_key=$kv->$o_key;
+			
+			}
+			
+			//	Add the database table, customer ID,
+			//	and type
+			$form->cust_id=$id;
+			$form->description=$this->eventname;
+			$form->type='Registration Fee';
+			//	I don't know why this field is used
+			//	to hold the literal database name,
+			//	but it is...
+			$form->po_num=$this->get_table_name_plain();
+			
+			return $form;
+		
+		}
+	
+	
 	}
 
 
