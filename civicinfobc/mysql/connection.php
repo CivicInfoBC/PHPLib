@@ -108,8 +108,11 @@
 		public function Escape ($value) {
 		
 			if (is_null($value)) return 'NULL';
-		
-			if ($value instanceof Name) return (string)$value;
+			
+			if (
+				($value instanceof Name) ||
+				($value instanceof Literal)
+			) return (string)$value;
 			
 			if ($value instanceof \DateTime) $value=$value->format('Y-m-d H:i:s');
 			
