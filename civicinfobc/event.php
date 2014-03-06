@@ -363,6 +363,24 @@
 		
 		
 		/**
+		 *	Adds common fields to an object if they are not
+		 *	already present.
+		 *
+		 *	\param [in] $obj
+		 *		The object to which to add the common fields.
+		 */
+		public function AddCommon ($obj) {
+		
+			$kv=new KeyValueWrapper($obj);
+			
+			if (!isset($kv->datepaid)) $kv->paid='NO';
+			
+			if (!isset($kv->datereg)) $kv->datereg=new MySQL\Literal('NOW()');
+		
+		}
+		
+		
+		/**
 		 *	Registers a participant.
 		 *
 		 *	\param [in] $obj
