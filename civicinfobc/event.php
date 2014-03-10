@@ -707,6 +707,42 @@
 			return $form;
 		
 		}
+		
+		
+		/**
+		 *	Determines the number of people registered in a certain
+		 *	session.
+		 *
+		 *	\param [in] $column
+		 *		The name of the database column to check.
+		 *	\param [in] $value
+		 *		The name of the value which indicates the desired
+		 *		session.
+		 *
+		 *	\return
+		 *		The number of people in the given session.
+		 */
+		protected function CheckSession ($column, $value) {
+		
+			$column=new MySQL\Name($column);
+			$table=$this->get_table_name();
+			$str='SELECT COUNT(*) as `count` FROM %s WHERE %s';
+			$results=is_null($value) ? $this->events->Execute(
+				$str.' IS NULL',
+				$table,
+				$column
+			) : $this->events->Execute(
+				$str.'=%s',
+				$table,
+				$column,
+				$value
+			);
+		
+			foreach ($results as $row) return $row->count;
+			
+			return 0;
+		
+		}
 	
 	
 	}
