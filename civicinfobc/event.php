@@ -146,13 +146,39 @@
 		
 		
 		/**
+		 *	Determines if the appropriate backdoor is set
+		 *	in the query string.
+		 *
+		 *	\param [in] $backdoor
+		 *		A backdoor to check in addition to the backdoor
+		 *		from the database.
+		 *
+		 *	\return
+		 *		\em true if the appropriate backdoor is set,
+		 *		\em false otherwise.
+		 */
+		public function IsBackdoor ($backdoor=null) {
+		
+			if (!isset(Request::$get->backdoor)) return false;
+			
+			return String::Equals(
+				$backdoor,
+				Request::$get->backdoor
+			) || String::Equals(
+				$this->billdbtable,
+				Request::$get->backdoor
+			);
+		
+		}
+		
+		
+		/**
 		 *	Determines whether a registration is
 		 *	open or not.
 		 *
 		 *	\param [in] $backdoor
-		 *		The backdoor for this registration,
-		 *		if any.  Defaults to \em null which
-		 *		means to backdoor.
+		 *		A backdoor to check in addition to the backdoor
+		 *		from the database.
 		 *
 		 *	\return
 		 *		\em true if this registration is open,
@@ -162,14 +188,7 @@
 		
 			//	Determine if the registration is open
 			//	because of the backdoor
-			if (
-				isset(Request::$get->backdoor) &&
-				!is_null($backdoor) &&
-				String::Equals(
-					$backdoor,
-					Request::$get->backdoor
-				)
-			) return true;
+			if ($this->IsBackdoor($backdoor)) return true;
 			
 			//	Determine if the registration is even
 			//	open
