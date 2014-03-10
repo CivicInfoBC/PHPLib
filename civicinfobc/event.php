@@ -745,6 +745,39 @@
 		}
 		
 		
+		private static function email_to (array $args) {
+		
+			$retr=array();
+			foreach ($args as $arg) if (is_array($arg)) $retr=array_merge(
+				$retr,
+				self::email_to($arg)
+			);
+			else $retr[]=$arg;
+			
+			return $retr;
+		
+		}
+		
+		
+		/**
+		 *	Gets an e-mail object which can be used to send
+		 *	registration confirmation e-mails.
+		 *
+		 *	The e-mail will be sent to all parameters passed.
+		 *	Arrays will be flattened.
+		 */
+		protected function GetEMail () {
+		
+			$retr=new \CivicInfoBC\EMail();
+			$retr->is_html=true;
+			$retr->subject='REGISTRATION '.$this->eventname;
+			$retr->to=self::email_to(func_get_args());
+			
+			return $retr;
+		
+		}
+		
+		
 		/**
 		 *	Formats the date(s) on which the event occurs.
 		 *
