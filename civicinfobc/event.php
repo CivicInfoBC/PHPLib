@@ -743,6 +743,29 @@
 			return 0;
 		
 		}
+		
+		
+		/**
+		 *	Formats the date(s) on which the event occurs.
+		 *
+		 *	\return
+		 *		A formatted string.
+		 */
+		public function FormatDate () {
+		
+			$range=new \CivicInfoBC\DateTimeRange(
+				$this->startdate,
+				$this->enddate
+			);
+			
+			return $range->Format(array(
+				'Y' => '^F ^j^S, ^Y - $F $j$S, $Y',
+				'n' => '^F ^j^S - $F $j$S, Y',
+				'j' => 'F ^j^S - $j$S, Y',
+				'' => 'F jS Y'
+			));
+		
+		}
 	
 	
 	}
