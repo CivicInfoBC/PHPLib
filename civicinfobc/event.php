@@ -770,7 +770,12 @@
 		
 			$retr=new \CivicInfoBC\EMail();
 			$retr->is_html=true;
-			$retr->subject='REGISTRATION '.$this->eventname;
+			$retr->subject=sprintf(
+				'REGISTRATION: %s - %s, %s',
+				$this->organizer,
+				$this->eventname,
+				$this->FormatDate()
+			);
 			$retr->to=self::email_to(func_get_args());
 			
 			return $retr;
