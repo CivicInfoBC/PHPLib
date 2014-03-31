@@ -16,6 +16,16 @@
 		 */
 		public $to;
 		/**
+		 *	Either the carbon copied recipient of the
+		 *	e-mail, or an array of recipients.
+		 */
+		public $cc;
+		/**
+		 *	Either the blind carbon copied recipient of
+		 *	the e-mail, or an array of recipients.
+		 */
+		public $bcc;
+		/**
 		 *	The sender of the e-mail.
 		 */
 		public $from;
@@ -35,31 +45,57 @@
 		public $headers=array();
 		
 		
-		private function get_to ($message) {
+		private function get_array ($str, $arr) {
 		
-			if (is_array($this->to)) {
+			$arr=ArrayUtil::Coalesce($arr);
 			
-				$retr='';
-				foreach ($this->to as $x) {
+			foreach (ArrayUtil::Coalesce($arr) as $x) {
+			
+				if ($str!=='') $str.=',';
 				
-					if ($retr!=='') $retr.=',';
-					
-					$retr.=$x;
-				
-				}
-				
-				return $retr;
+				$str.=$x;
 			
 			}
 			
-			return $this->to;
+			return $str;
+		
+		}
+		
+		
+		private function get_to ($message) {
+		
+			$retr='';
+			
+			$retr=self::get_array($str,$this->to);
+			$retr=self::get_array($str,$this->cc);
+			$retr=self::get_array($str,$this->bcc);
+			
+			return $retr;
 		
 		}
 		
 		
 		private static function get_header ($key, $value) {
 		
-			return sprintf("%s:%s\r\n",$key,$value);
+			$value=ArrayUtil::Coalesce($value);
+			
+			if (count($value)===0) return '';
+			
+			$retr=$key.':';
+			
+			$first=true;
+			foreach ($value as $x) {
+			
+				if ($first) $first=false;
+				else $retr.=',';
+				
+				$retr.=$x;
+			
+			}
+			
+			$retr.="\r\n";
+			
+			return $retr;
 		
 		}
 		
@@ -76,24 +112,18 @@
 		
 		private function get_headers () {
 		
-			$found_from=false;
-			$found_content_type=false;
 			$headers='';
-			foreach ($this->headers as $key=>$value) {
+			foreach ($this->headers as $key=>$value) $headers.=self::get_header($key,$value);
 			
-				$headers.=self::get_header($key,$value);
-				
-				if (self::cmp($key,'from')) $found_from=true;
-				else if (self::cmp($key,'content-type')) $found_content_type=true;
+			if (!ArrayUtil::In($this->headers,'From')) $headers.=self::get_header('From',$this->from);
 			
-			}
+			if (!ArrayUtil::In($this->headers,'To')) $headers.=self::get_header('To',$this->to);
 			
-			if (!($found_from || is_null($this->from))) $headers.=self::get_header(
-				'From',
-				$this->from
-			);
+			if (!ArrayUtil::In($this->headers,'CC')) $headers.=self::get_header('CC',$this->cc);
 			
-			if (!$found_content_type && $this->is_html) $headers.=self::get_header(
+			if (!ArrayUtil::In($this->headers,'BCC')) $headers.=self::get_header('BCC',$this->bcc);
+			
+			if (!ArrayUtil::In($this->headers,'Content-Type')) $headers.=self::get_header(
 				'Content-Type',
 				'text/html; charset=utf-8'
 			);
