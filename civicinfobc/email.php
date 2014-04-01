@@ -46,8 +46,6 @@
 		
 		
 		private function get_array ($str, $arr) {
-		
-			$arr=ArrayUtil::Coalesce($arr);
 			
 			foreach (ArrayUtil::Coalesce($arr) as $x) {
 			
@@ -66,9 +64,9 @@
 		
 			$retr='';
 			
-			$retr=self::get_array($str,$this->to);
-			$retr=self::get_array($str,$this->cc);
-			$retr=self::get_array($str,$this->bcc);
+			$retr=self::get_array($retr,$this->to);
+			$retr=self::get_array($retr,$this->cc);
+			$retr=self::get_array($retr,$this->bcc);
 			
 			return $retr;
 		
