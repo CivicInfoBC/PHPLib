@@ -146,7 +146,7 @@
 			
 			//	Execute query
 			if (($result=$this->mysqli->query(
-				(count($arr)===0) ? $text : call_user_func_array(
+				(count($arr)===1) ? $text : call_user_func_array(
 					'sprintf',
 					$arr
 				)
