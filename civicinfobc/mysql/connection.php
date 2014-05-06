@@ -189,12 +189,11 @@
 		 *		clause.
 		 */
 		public function Update ($table_name, $key_column, $values) {
-		
-			if (count($values)<2) throw new \Exception('Must be at least one non-key value');
 			
 			//	Build SET and WHERE
 			$set='';
 			$where=null;
+			$count=0;
 			foreach ($values as $key=>$value) {
 			
 				$str=sprintf(
@@ -203,10 +202,21 @@
 					$this->Escape($value)
 				);
 				
-				if (String::Equals($key,$key_column)) $where.=$str;
-				else $set.=$str;
+				if (\CivicInfoBC\String::Equals($key,$key_column)) {
+				
+					$where.=$str;
+					
+				} else {
+				
+					if ($set!=='') $set.=',';
+					$set.=$str;
+					++$count;
+				
+				}
 			
 			}
+			
+			if ($count===0) throw new \Exception('Must be at least one non-key value');
 			
 			//	Check to make sure key column was found
 			if (is_null($where)) throw new \Exception('Key column not found');
