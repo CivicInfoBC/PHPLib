@@ -40,8 +40,7 @@
 		
 		public function __set ($key, $value) {
 		
-			if (is_null($value)) unset($this->values[$key]);
-			else $this->values[$key]=$value;
+			$this->values[$key]=$value;
 		
 		}
 		
