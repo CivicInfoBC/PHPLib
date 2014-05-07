@@ -135,7 +135,7 @@
 			$tried_default=false;
 			while (
 				is_null($info->controller) ||
-				!class_exists($info->controller=$this->namespace.$info->controller)
+				!class_exists($this->namespace.$info->controller)
 			) {
 			
 				//	Can we try the default?
@@ -144,7 +144,7 @@
 				//	YES
 				
 				//	Make the controller one of the arguments
-				array_unshift(
+				if (!is_null($info->controller)) array_unshift(
 					$info->arguments,
 					$info->controller
 				);
@@ -155,13 +155,15 @@
 			
 			//	We have a controller
 			
+			$controller=$this->namespace.$info->controller;
+			
 			//	Does the controller class properly
 			//	inherit from base, if a base is
 			//	given?
 			if (!(
 				is_null($this->base) ||
 				is_subclass_of(
-					$info->controller,
+					$controller,
 					$this->base
 				)
 			)) throw new HTTP\Status(HTTP\Status::NOT_FOUND);
@@ -170,7 +172,7 @@
 			//	one
 			$args=func_get_args();
 			unset($args[0]);
-			$ref=new \ReflectionClass($info->controller);
+			$ref=new \ReflectionClass($controller);
 			return $ref->newInstanceArgs($args);
 		
 		}
