@@ -246,6 +246,7 @@
 	
 		const MOVED_PERMENANTLY=301;
 		const FOUND=302;
+		const SEE_OTHER=303;
 		const BAD_REQUEST=400;
 		const FORBIDDEN=403;
 		const NOT_FOUND=404;
