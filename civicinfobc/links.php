@@ -41,7 +41,10 @@
 		}
 		
 		
-		public function Get ($controller=null, $args=array(), $get=array()) {
+		public function Get ($controller=null, $args=null, $get=null) {
+		
+			$args=ArrayUtil::Coalesce($args);
+			$get=ArrayUtil::Coalesce($get);
 		
 			return $this->get_root().self::component($controller).self::component($args).URL::MakeQueryString($get);
 		
