@@ -44,21 +44,12 @@
 		}
 		
 		
-		/**
-		 *	Renders the next template in the chain.
-		 *
-		 *	May be called from within a template to
-		 *	start rendering the next template before
-		 *	that template has finished rendering, for
-		 *	example if the inner template should make
-		 *	up the body of a page.
-		 */
-		public function Next () {
+		private function next_impl () {
 		
 			//	Stop rendering if this is the last
 			//	template
-			if (count($this->files)===0) return;
-			
+			if (count($this->files)===0) return false;
+		
 			//	Get the next file
 			$file=$this->make_file(array_shift($this->files));
 			
@@ -73,9 +64,35 @@
 				)
 			);
 			
-			//	Continue to the next template until
-			//	all templates have been consumed
-			$this->Next();
+			return true;
+		
+		}
+		
+		
+		/**
+		 *	Renders the next template in the chain, but does
+		 *	not implicitly continue rendering templates in the
+		 *	chain thereafter.
+		 */
+		public function NextOne () {
+		
+			$this->next_impl();
+		
+		}
+		
+		
+		/**
+		 *	Renders the next template in the chain.
+		 *
+		 *	May be called from within a template to
+		 *	start rendering the next template before
+		 *	that template has finished rendering, for
+		 *	example if the inner template should make
+		 *	up the body of a page.
+		 */
+		public function Next () {
+		
+			while ($this->next_impl());
 		
 		}
 		
