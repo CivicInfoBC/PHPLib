@@ -165,7 +165,7 @@
 				$backdoor,
 				Request::$get->backdoor
 			) || String::Equals(
-				$this->billdbtable,
+				$this->billUsername,
 				Request::$get->backdoor
 			);
 		
