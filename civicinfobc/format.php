@@ -90,6 +90,22 @@
 			return $name;
 		
 		}
+		
+		
+		/**
+		 *	Formats a number as money.
+		 *
+		 *	\param [in] amount
+		 *		The number to format.
+		 *
+		 *	\return
+		 *		\em amount formatted as money.
+		 */
+		public static function Money ($amount) {
+		
+			return sprintf('$%.2f',round(floatval($amount),2));
+		
+		}
 	
 	
 	}
