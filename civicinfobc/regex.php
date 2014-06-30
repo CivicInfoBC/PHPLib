@@ -156,11 +156,11 @@
 		}
 		
 		
-		public static function Split ($pattern, $subject) {
+		public static function Split ($pattern, $subject, $empty=true) {
 		
-			$retr=Error::Wrap(function () use ($pattern, $subject) {
+			$retr=Error::Wrap(function () use ($pattern, $subject, $empty) {
 			
-				return preg_split($pattern,$subject);
+				return preg_split($pattern,$subject,-1,$empty ? 0 : PREG_SPLIT_NO_EMPTY);
 			
 			});
 			
