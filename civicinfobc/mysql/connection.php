@@ -116,8 +116,9 @@
 				($value instanceof Literal)
 			) return (string)$value;
 			
-			if (is_bool($value)) $value=$value ? 1 : 0;
-			else if ($value instanceof \DateTime) $value=$value->format('Y-m-d H:i:s');
+			if (is_bool($value)) return $value ? '1' : '0';
+			
+			if ($value instanceof \DateTime) $value=$value->format('Y-m-d H:i:s');
 			
 			return '\''.$this->mysqli->real_escape_string($value).'\'';
 		
