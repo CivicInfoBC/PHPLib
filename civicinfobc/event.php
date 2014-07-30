@@ -582,7 +582,8 @@
 		 *	formatted.
 		 *
 		 *	A default implementation is provided which
-		 *	reformats all floating-point values as dollars.
+		 *	reformats all floating-point values as dollars,
+		 *	and all booleans as \"Yes\" or \"No\".
 		 *
 		 *	\param [in] $key
 		 *		The key being processed.
@@ -604,6 +605,8 @@
 				'$%.2f',
 				round($obj->$key,2)
 			);
+			
+			if (is_bool($obj->$key)) return $obj->$key ? 'Yes' : 'No';
 		
 			return null;
 		
