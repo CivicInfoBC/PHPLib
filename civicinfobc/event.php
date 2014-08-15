@@ -377,8 +377,10 @@
 		 *	\param [in] $obj
 		 *		The details of the registration which is being
 		 *		performed.
+		 *	\param [in] $options
+		 *		The options associated with this registration.
 		 */
-		protected function PreRegisterHook (KeyValueWrapper $obj) {	}
+		protected function PreRegisterHook (KeyValueWrapper $obj, EventRegisterOptions $options) {	}
 		
 		
 		/**
@@ -407,21 +409,18 @@
 		 *		keys giving the database column names,
 		 *		the values giving the corresponding
 		 *		database column values.
-		 *	\param [in] $verify
-		 *		An array giving the names of the columns
-		 *		to check for duplicates in checking if
-		 *		the participant being registered is already
-		 *		registered.  Defaults to an array containing
-		 *		\"firstname\" and \"lastname\".
-		 *	\param [in] $case_insensitive
-		 *		If \em true all SQL string comparisons shall
-		 *		be done in a case insensitive manner.  Defaults
-		 *		to \em true.
+		 *	\param [in] $options
+		 *		An EventRegisterOptions giving the options
+		 *		to use for this registration.  Defaults to
+		 *		\em null.  If \em null a default constructed
+		 *		EventRegisterOptions object shall be used.
 		 *
 		 *	\return
 		 *		The ID of the newly registered participant.
 		 */
-		public function Register ($obj, array $verify=array('firstname','lastname'), $case_insensitive=true) {
+		public function Register ($obj, EventRegisterOptions $options=null) {
+		
+			if (is_null($options)) $options=new EventRegisterOptions();
 		
 			//	Is the table auto increment?
 			//
@@ -442,7 +441,7 @@
 			
 			//	Make sure that it's still possible/permissible
 			//	to register
-			if (!$this->check_count()) throw new CouldNotRegister(
+			if (!($options->exceed_capacity || $this->check_count())) throw new CouldNotRegister(
 				CouldNotRegister::FULL
 			);
 			
@@ -453,7 +452,7 @@
 			//	Make sure that this participant has not already
 			//	registered
 			$arr=array();
-			foreach ($verify as $x) {
+			foreach ($options->verify as $x) {
 			
 				if (!isset($kv->$x)) throw new \Exception(
 					'Field required to check for duplicate participants is missing'
@@ -462,12 +461,12 @@
 				$arr[$x]=$kv->$x;
 			
 			}
-			if ($this->IsRegistered($arr,$case_insensitive)) throw new CouldNotRegister(
+			if ($this->IsRegistered($arr,$options->case_insensitive)) throw new CouldNotRegister(
 				CouldNotRegister::ALREADY_REGISTERED
 			);
 			
 			//	Call the hook
-			$this->PreRegisterHook($kv);
+			$this->PreRegisterHook($kv,$options);
 			
 			//	If the table isn't auto increment, we need
 			//	to find a unique ID for this row, unless
