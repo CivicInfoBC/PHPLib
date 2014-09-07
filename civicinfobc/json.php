@@ -94,6 +94,28 @@
 			echo($text);
 		
 		}
+		
+		
+		/**
+		 *	Gets the body of the request decoded as JSON.
+		 *
+		 *	\param [in] $depth
+		 *		The maximum depth to which this function
+		 *		will recurse to decode \em json.  Defaults
+		 *		to \em null in which case a sensible
+		 *		default will be used.
+		 *
+		 *	\return
+		 *		The result of decoding the request.
+		 */
+		public static function Get ($depth=null) {
+		
+			return self::Decode(
+				Request::GetBody(),
+				$depth
+			);
+		
+		}
 	
 	
 	}
