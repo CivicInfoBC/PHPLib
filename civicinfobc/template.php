@@ -12,7 +12,7 @@
 	 *	base class serves to hide all the private
 	 *	member variables.
 	 */
-	abstract class TemplateBase extends Object {
+	abstract class TemplateBase extends Object implements Renderable {
 	
 	
 		private $dir;
