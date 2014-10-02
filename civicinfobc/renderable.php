@@ -16,6 +16,16 @@
 		 *	object as HTML.
 		 */
 		public function Render ();
+		
+		
+		/**
+		 *	When implemented in a derived class, retrieves the
+		 *	rendered HTML as a string.
+		 *
+		 *	\return
+		 *		A string.
+		 */
+		public function Get ();
 	
 	
 	};
