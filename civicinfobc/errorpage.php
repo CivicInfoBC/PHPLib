@@ -4,141 +4,155 @@
 	namespace CivicInfoBC;
 	
 	
-	class ErrorPage {
+	/**
+	 *	Handles errors by displaying a page to the user.
+	 */
+	class ErrorPage extends ErrorHandlerDecorator {
 	
 	
+		private $render;
+		
+		
+		/**
+		 *	IPs for which error e-mails shall not be generated.
+		 *
+		 *	This field is for legacy support and should not be
+		 *	used for new development.
+		 */
 		public $ip_blacklist=array();
+		/**
+		 *	HTTP status codes for which error e-mails should not
+		 *	be generated.
+		 *
+		 *	This field is for legacy support and should not be used
+		 *	for new development.
+		 */
 		public $status_blacklist=array();
+		/**
+		 *	The template to use to create an error page, or \em null
+		 *	if no error page should be created.
+		 *
+		 *	This field is for legacy support and should not be used
+		 *	for new development.
+		 */
 		public $html_template;
+		/**
+		 *	The template to use to create an e-mail, or \em null if
+		 *	no e-mail should be sent.
+		 *
+		 *	This field is for legacy support and should not be used
+		 *	for new development.
+		 */
 		public $mail_template;
+		/**
+		 *	The EMail item to use to send an e-mail, or \em null if no
+		 *	e-mail should be sent.
+		 *
+		 *	This field is for legacy support and should not be used
+		 *	for new development.
+		 */
 		public $mail;
 		
 		
-		private function mail ($ex) {
+		private function is_mail (\Exception $ex) {
 		
 			if (
-				//	If there's no mail template, we
-				//	can't send mail
-				is_null($this->mail_template) ||
-				//	If there's no mail object, we can't
-				//	send mail
 				is_null($this->mail) ||
-				//	If there's no one to send to, we don't
-				//	send
+				is_null($this->mail_template) ||
 				(count($this->mail->to)===0) ||
-				//	If we've been told not to send e-mails
-				//	for this IP, don't
 				in_array(
 					Server::Get('REMOTE_ADDR'),
 					$this->ip_blacklist,
 					true
-				) ||
-				//	If we've been told not to send e-mails for
-				//	this particular HTTP status code, don't
-				in_array(
-					$ex->getCode(),
-					$this->status_blacklist,
-					true
 				)
-			) return;
+			) return false;
 			
-			//	Load the exception into the mail template
-			$this->mail_template->ex=$ex;
+			if (!($ex instanceof HTTP\Status)) $ex=new HTTP\Status(HTTP\Status::SERVER_ERROR,$ex);
 			
-			//	Generate a subject if one does not already-
-			//	exist
-			if (is_null($this->mail->subject)) $this->mail->subject=sprintf(
-				'%s: Error in script %s',
-				Server::Get('COMPUTERNAME'),
-				Server::Get('SCRIPT_FILENAME')
+			return !in_array(
+				$ex->getCode(),
+				$this->status_blacklist,
+				true
 			);
-			
-			//	Send email and ignore exceptions
-			try {
-			
-				$this->mail->Send($this->mail_template);
-				
-			} catch (\Exception $e) {	}
 		
 		}
 		
 		
-		private function render ($ex) {
+		private function handle (\Exception $ex) {
 		
-			//	If there's no HTML template, we can't render
-			if (is_null($this->html_template)) return;
+			$stack=new ErrorHandler();
 			
-			//	Load the exception into the HTML template
-			$this->html_template->ex=$ex;
+			if (!is_null($this->html_template)) $stack=new self($this->html_template,$stack);
 			
-			//	Render
-			$this->html_template->Render();
+			if ($this->is_mail($ex)) $stack=new ErrorEMail($this->mail,$this->mail_template,$stack);
+			
+			$stack=new ErrorHeader($stack);
+			
+			$stack->Panic($ex);
 		
 		}
 		
 		
-		private function handle ($ex) {
+		private function legacy (\Exception $ex) {
 		
-			//	If what we were passed wasn't an exception,
-			//	make it one
-			if (!($ex instanceof \Exception)) $ex=new \Exception($ex);
-		
-			//	If the thrown exception was not an HTTP
-			//	status exception, wrap it in one
-			if (!($ex instanceof HTTP\Status)) $ex=new HTTP\Status(
-				HTTP\Status::SERVER_ERROR,
-				$ex
-			);
-			
-			//	Send the headers
-			$ex->Send();
-			
-			//	If the thrown exception was just a redirect,
-			//	that's not actually an error, so skip further
-			//	processing
-			if ($ex instanceof HTTP\Redirect) return;
-			
-			//	Send mail if appropriate
-			$this->mail($ex);
-			
-			//	Output HTML
-			$this->render($ex);
-		
-		}
-		
-		
-		public function Panic ($ex) {
-		
-			//	Just make sure we don't throw
 			try {
 			
 				$this->handle($ex);
 			
 			} catch (\Exception $e) {	}
 			
-			//	END
 			exit();
 		
 		}
 		
 		
-		public function Guard ($callback) {
+		/**
+		 *	Creates a new ErrorPage object.
+		 *
+		 *	If the first parameter is \em null (or defaulted), this object
+		 *	will operate in legacy mode.  This behaviour should not be used
+		 *	for new development.
+		 *
+		 *	\param [in] $render
+		 *		The object to render when an error occurs.  If this
+		 *		object implements \em Renderable its \em Render method
+		 *		will be called, otherwise it will be converted to a string
+		 *		and echoed.  If an object its \em ex property will be set to
+		 *		the triggering exception before rendering/stringification.
+		 *	\param [in] $inner
+		 *		An inner ErrorHandler to decorate.  If \em null no ErrorHandler
+		 *		will be decorated.
+		 */
+		public function __construct ($render=null, ErrorHandler $inner=null) {
 		
-			ob_start();
+			parent::__construct($inner);
+		
+			$this->render=$render;
+		
+		}
+		
+		
+		public function Panic (\Exception $ex) {
+		
+			//	Shim for legacy support
+			if (is_null($this->render)) {
+			
+				$this->legacy($ex);
+			
+				return;
+			
+			}
 		
 			try {
 			
-				$callback();
+				if (is_object($this->render)) $this->render->ex=$ex;
 				
-			} catch (\Exception $e) {
+				if ($this->render instanceof Renderable) $this->render->Render();
+				else echo($this->render);
 			
-				ob_end_clean();
+			} catch (\Exception $e) {	}
 			
-				$this->Panic($e);
-			
-			}
-			
-			ob_end_flush();
+			parent::Panic($ex);
 		
 		}
 	
