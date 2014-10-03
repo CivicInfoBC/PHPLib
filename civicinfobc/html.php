@@ -4,7 +4,28 @@
 	namespace CivicInfoBC;
 	
 	
+	/**
+	 *	Encapsulates HTML text.
+	 */
 	class HTML {
+	
+	
+		private $arr;
+		
+		
+		/**
+		 *	Constructs a new HTML object.
+		 *
+		 *	When this object is converted to a string, all
+		 *	arguments passed to this construtor will be
+		 *	stringified, HTML escaped, and concatenated to
+		 *	form the HTML.
+		 */
+		public function __construct () {
+		
+			$arr=func_get_args();
+		
+		}
 	
 	
 		private static function escape_array ($arr) {
@@ -17,6 +38,13 @@
 		}
 	
 	
+		/**
+		 *	Stringifies, HTML escapes, and concatenates all
+		 *	arguments.
+		 *
+		 *	\return
+		 *		An HTML string.
+		 */
 		public static function Escape () {
 		
 			return self::escape_array(func_get_args());
@@ -24,6 +52,10 @@
 		}
 		
 		
+		/**
+		 *	Stringifies, HTML escapes, concatenates, and echoes
+		 *	all arguments.
+		 */
 		public static function Write () {
 		
 			echo(self::escape_array(func_get_args()));
@@ -60,6 +92,20 @@
 			if (!is_null($error)) throw new \Exception($error->message,$error->code);
 			
 			return $retr;
+		
+		}
+		
+		
+		/**
+		 *	Obtains an HTML string which represents the object or
+		 *	objects stored in this object.
+		 *
+		 *	\return
+		 *		A string.
+		 */
+		public function __toString () {
+		
+			return self::Escape($this->arr);
 		
 		}
 	
