@@ -63,6 +63,20 @@
 		}
 		
 		
+		/**
+		 *	Parses a string containing HTML into a DOMDocument.
+		 *
+		 *	\param [in] $html
+		 *		A string containing HTML.
+		 *	\param [in] $strict
+		 *		\em true if the parsing should be strict, i.e. if
+		 *		it should throw exceptions on warnings as well as
+		 *		errors.  Defaults to \em false.
+		 *
+		 *	\return
+		 *		A DOMDocument which represents the HTML parsed from
+		 *		\em html.
+		 */
 		public static function Parse ($html, $strict=false) {
 		
 			$retr=new \DOMDocument();
