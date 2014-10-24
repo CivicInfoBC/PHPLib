@@ -58,6 +58,13 @@
 		}
 		
 		
+		public function Join () {
+		
+			return URL::Combine($this->get_root(),func_get_args());
+		
+		}
+		
+		
 		public static function GetSelf () {
 		
 			$arr=array();
