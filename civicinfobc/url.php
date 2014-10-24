@@ -78,26 +78,11 @@
 		
 		
 		private static function combine_array ($arr) {
-		
-			switch (count($arr)) {
-			
-				case 0:return '';
-				
-				case 1:return $arr[0];
-				
-				default:break;
-			
-			}
 			
 			$retr='';
 			foreach ($arr as $x) {
 			
-				if (is_array($x)) {
-				
-					if (($c=count($x))===0) continue;
-					else $x=($c===1) ? $x[0] : self::combine_array($x);
-				
-				}
+				if (is_array($x)) $x=self::combine_array($x);
 				
 				$retr=($retr==='') ? $x : Regex::Replace(
 					'/\\/$/u',
