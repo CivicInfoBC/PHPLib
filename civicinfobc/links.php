@@ -58,6 +58,24 @@
 		}
 		
 		
+		public function GetRelative ($url) {
+		
+			return Regex::Replace(
+				'/'.Regex::Replace(
+					'/^http:/ui',
+					'https?:',
+					Regex::Escape(
+						$this->root,
+						'/'
+					)
+				).'/ui',
+				'',
+				$url
+			);
+		
+		}
+		
+		
 		public function Join () {
 		
 			return URL::Combine($this->get_root(),func_get_args());
