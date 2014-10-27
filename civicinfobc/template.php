@@ -49,9 +49,18 @@
 			//	Stop rendering if this is the last
 			//	template
 			if (count($this->files)===0) return false;
-		
-			//	Get the next file
-			$file=$this->make_file(array_shift($this->files));
+			
+			$next=array_shift($this->files);
+			
+			if ($next instanceof Renderable) {
+			
+				$next->Render();
+				
+				return true;
+			
+			}
+			
+			$file=$this->make_file($next);
 			
 			//	If the template file exists, pull
 			//	it in
