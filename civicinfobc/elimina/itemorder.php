@@ -28,9 +28,9 @@
 		 *		The item.
 		 *	\param [in] $quantity
 		 *		The number of the item being
-		 *		ordered.
+		 *		ordered.  Defaults to zero.
 		 */
-		public function __construct (Item $item, $quantity) {
+		public function __construct (Item $item, $quantity=0) {
 		
 			$this->item=$item;
 			$this->quantity=$quantity;

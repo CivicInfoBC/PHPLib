@@ -5,120 +5,114 @@
 	
 	
 	/**
-	 *	Represents a container in which items
-	 *	might be shipped.
+	 *	A container into which items may be packed.
 	 */
-	class Container {
+	class Container extends HasDimensions {
+	
+	
+		private static $volume_scale_factor=0.6;
+		
+		
+		private $height;
+		private $width;
+		private $length;
 	
 	
 		/**
-		 *	The name of this container.
+		 *	The name of the container.
 		 */
 		public $name;
 		/**
-		 *	The cost of this container.
+		 *	The cost of the container.
 		 */
 		public $cost;
-		/**
-		 *	The dimensions of this container for
-		 *	use in shipping calculations.
-		 */
-		public $dimensions;
-		/**
-		 *	The weight of this container for use
-		 *	in shipping calculations.
-		 */
-		public $weight;
-		/**
-		 *	The maximum number of items which may
-		 *	be placed in this container, or \em null
-		 *	if the capacity of this container
-		 *	depends only on its height.
-		 */
-		public $max;
-		/**
-		 *	The height of this container for use
-		 *	in deciding whether a given order
-		 *	will fit, or \em null if the capacity
-		 *	depends only on the number of items.
-		 */
-		public $height;
 		
 		
-		public function __construct (
-			$name,
-			$cost,
-			$max,
-			\CivicInfoBC\CanadaPost\Dimensions $dimensions,
-			\CivicInfoBC\Measure $height=null,
-			\CivicInfoBC\Measure $weight=null
-		) {
+		/**
+		 *	Creates a new Container.
+		 *
+		 *	\param [in] $name
+		 *		The name.
+		 *	\param [in] $cost
+		 *		The cost.
+		 *	\param [in] $height
+		 *		The height.
+		 *	\param [in] $width
+		 *		The width.
+		 *	\param [in] $length
+		 *		The length.
+		 */
+		public function __construct ($name, $cost, \CivicInfoBC\Measure $height, \CivicInfoBC\Measure $width, \CivicInfoBC\Measure $length) {
+		
+			parent::__construct($height,$width,$length);
 		
 			$this->name=$name;
 			$this->cost=$cost;
-			$this->max=$max;
-			$this->dimensions=$dimensions;
 			$this->height=$height;
-			$this->weight=$weight;
+			$this->width=$width;
+			$this->length=$length;
 		
 		}
 		
 		
-		private function get_copy (\CivicInfoBC\Measure $height) {
+		private static function copy (array $items) {
 		
-			$retr=$this;
-		
-			foreach ($this->dimensions as $key=>&$value) {
-			
-				if (is_null($value)) {
-				
-					if ($retr===$this) $retr=clone $this;
-					
-					$retr->dimensions->$key=$height;
-				
-				}
-			
-			}
+			$retr=array();
+			foreach ($items as $item) $retr[]=clone $item;
 			
 			return $retr;
 		
 		}
 		
 		
-		public function Get ($order) {
+		/**
+		 *	Attempts to pack this container with items from
+		 *	an array of ItemOrder objects.
+		 *
+		 *	\param [in] $items
+		 *		An array of ItemOrder objects.
+		 */
+		public function Pack (array $items) {
 		
-			$order=\CivicInfoBC\ArrayUtil::Coalesce($order);
+			$items=self::copy($items);
+			$packed=array();
+			$volume=$this->Volume()*self::$volume_scale_factor;
+			foreach ($items as $key=>&$item) {
 			
-			//	Get totals for the order -- total height
-			//	and total number of items
-			$total=0;
-			$height=new \CivicInfoBC\Measure('0cm');
-			foreach ($order as $item) {
-			
-				$height=$height->Add(
-					$item->item->height->Multiply(
-						$item->quantity
-					)
-				);
-				$total+=$item->quantity;
+				$p=new ItemOrder($item->item);
+				$v=$item->item->Volume();
+				while (($volume>=$v) && ($item->quantity!==0)) {
+				
+					$volume-=$v;
+					--$item->quantity;
+					++$p->quantity;
+				
+				}
+				
+				if ($item->quantity===0) unset($items[$key]);
+				
+				if ($p->quantity!==0) $packed[]=$p;
 			
 			}
 			
-			//	If there's too many items, or the
-			//	items are too tall, fail
-			if (
-				(
-					!is_null($this->max) &&
-					($total>$this->max)
-				) ||
-				(
-					!is_null($this->height) &&
-					($this->height->Compare($height)<0)
-				)
-			) return null;
+			return new PackResult($this,$packed,array_values($items));
+		
+		}
+		
+		
+		/**
+		 *	Gets a partially populated CanadaPost\\Parcel
+		 *	object representing this container.
+		 *
+		 *	\return
+		 *		A CanadaPost\\Parcel object.
+		 */
+		public function Parcel () {
+		
+			$retr=new \CivicInfoBC\CanadaPost\Parcel();
+			$retr->dimensions=new \CivicInfoBC\CanadaPost\Dimensions($this->length,$this->width,$this->height);
 			
-			//	Return
-			return $this->get_copy($height);
+			return $retr;
 		
 		}
 	
