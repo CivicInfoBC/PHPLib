@@ -65,7 +65,7 @@
 			
 				if (is_null($comparer)
 					?	($what===$value)
-					:	$comparer($what,$value)
+					:	$comparer($value,$what)
 				) return $key;
 			
 			}
