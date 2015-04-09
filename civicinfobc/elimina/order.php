@@ -43,6 +43,38 @@
 					self::measure('0.5 inches'),
 					self::measure('7 inches'),
 					self::measure('9 inches')
+				),
+				'minute_taking_ebook' => new Item(
+					'Mina\'s Guide to Minute Taking (E-Book)',
+					25.0,
+					self::measure('0kg'),
+					self::measure('0 inches'),
+					self::measure('0 inches'),
+					self::measure('0 inches')
+				),
+				'boardroom_problems_ebook' => new Item(
+					'101 Board Room Problems (E-Book)',
+					30.0,
+					self::measure('0kg'),
+					self::measure('0 inches'),
+					self::measure('0 inches'),
+					self::measure('0 inches')
+				),
+				'complete_handbook_ebook' => new Item(
+					'The Complete Handbook of Business Meetings',
+					35.0,
+					self::measure('0kg'),
+					self::measure('0 inches'),
+					self::measure('0 inches'),
+					self::measure('0 inches')
+				),
+				'meetings_sourcebook_ebook' => new Item(
+					'The Business Meetings Sourcebook',
+					80.0,
+					self::measure('0kg'),
+					self::measure('0 inches'),
+					self::measure('0 inches'),
+					self::measure('0 inches')
 				)
 			);
 			
@@ -168,6 +200,20 @@
 		public function Pack () {
 		
 			if (is_null($this->packing)) {
+				
+				$ebooks=true;
+				foreach ($this->order as $item) {
+					
+					if ($item->item->weight->quantity!=0) {
+						
+						$ebook=false;
+						break;
+						
+					}
+					
+				}
+				
+				if ($ebooks) return $this->packing=array();
 			
 				$packer=new Packer(self::$containers);
 				$this->packing=$packer->Pack($this->order);
