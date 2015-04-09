@@ -60,18 +60,13 @@
 		
 		public function GetRelative ($url) {
 		
-			return Regex::Replace(
-				'/'.Regex::Replace(
-					'/^http:/ui',
-					'https?:',
-					Regex::Escape(
-						$this->root,
-						'/'
-					)
-				).'/ui',
+			$root=Regex::Replace(
+				'/^https?:\\/\\//ui',
 				'',
-				$url
+				$this->root
 			);
+			$regex='/https?:\\/\\/'.Regex::Escape($root,'/').'/ui';
+			return Regex::Replace($regex,'',$url);
 		
 		}
 		
