@@ -114,6 +114,67 @@
 			return false;
 		
 		}
+		
+		
+		private static function stable_sort (array $a, $sorter) {
+			
+			$c=count($a);
+			
+			if ($c<=1) return $a;
+			
+			$h=intval($c/2);
+			return iterator_to_array(
+				Iterable::Merge(
+					self::stable_sort(
+						array_slice($a,0,$h),
+						$sorter
+					),
+					self::stable_sort(
+						array_slice($a,$h),
+						$sorter
+					),
+					$sorter
+				)
+			);
+			
+		}
+		
+		
+		/**
+		 *	Stably sorts an array.
+		 *
+		 *	Any keys associated with items in the array will be
+		 *	discarded.
+		 *
+		 *	\param [in] $a
+		 *		The array to sort.
+		 *	\param [in] $sorter
+		 *		A callable object which will be used to compare elements
+		 *		from \em a.  Should return
+		 *		a negative integer if its first argument should
+		 *		precede its second argument, 0 if the two are not
+		 *		ordered relative to one another, or a positive
+		 *		number if its second argument should precede its
+		 *		first argument.  Defaults to \em null, in which case
+		 *		The less than, greater than, and equal to operators
+		 *		will be used for comparison.
+		 *
+		 *	\return
+		 *		A stably sorted version of \em a.
+		 */
+		public static function StableSort (array $a, $sorter=null) {
+			
+			if (is_null($sorter)) $sorter=function ($a, $b) {
+				
+				if ($a<$b) return -1;
+				if ($a===$b) return 0;
+				return 1;
+				
+			};
+			
+			return self::stable_sort($a,$sorter);
+			
+		}
 	
 	
 	}
