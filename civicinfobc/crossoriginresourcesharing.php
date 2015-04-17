@@ -20,10 +20,17 @@
 		public function Send () {
 		
 			$headers=Request::GetHeaders();
-			if (
-				isset($headers->origin) &&
-				ArrayUtil::In($this->allowed,$headers->origin)
-			) header('Access-Control-Allow-Origin: '.$headers->origin);
+			if (!isset($headers->origin)) return;
+			
+			foreach ($this->allowed as $allowed) {
+				
+				if (
+					($allowed===$headers->origin) ||
+					(('http://'.$allowed)===$headers->origin) ||
+					(('https://'.$allowed)===$headers->origin)
+				) header('Access-Control-Allow-Origin: '.$headers->origin);
+				
+			}
 		
 		}
 	
