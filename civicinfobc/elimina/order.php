@@ -206,7 +206,7 @@
 					
 					if ($item->item->weight->quantity!=0) {
 						
-						$ebook=false;
+						$ebooks=false;
 						break;
 						
 					}
