@@ -110,6 +110,22 @@
 		}
 		
 		
+		/**
+		 *	Combines several traversable objects into one range.
+		 *
+		 *	Takes any number of arguments, which must all be traversable.
+		 *
+		 *	\return
+		 *		A Traversable which traverses the ranges of all arguments,
+		 *		in the order in which they were passed.
+		 */
+		public static function Combine () {
+			
+			foreach (func_get_args() as $arg) foreach ($arg as $x) yield $x;
+			
+		}
+		
+		
 	}
 
 
