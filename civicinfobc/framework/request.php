@@ -65,14 +65,18 @@
 		 *
 		 *	\param [in] $key
 		 *		The key of the query string parameter to retrieve.
+		 *		Passing \em null will cause a Traversable object to
+		 *		be returned which traverses all query string parameters.
+		 *		Defaults to \em null.
 		 *	\param [in] $default
 		 *		The default value to retrieve if no value is associated
 		 *		with \em key.  Defaults to \em null.
 		 *
 		 *	\return
-		 *		The retrieved value.
+		 *		The retrieved value, or a Traversable if \em null was
+		 *		passed as \em key.
 		 */
-		abstract public function Get ($key, $default=null);
+		abstract public function Get ($key=null, $default=null);
 		
 		
 		/**
@@ -80,15 +84,18 @@
 		 *	does not exist.
 		 *
 		 *	\param [in] $key
-		 *		The name of the cookie to retrieve.
+		 *		The name of the cookie to retrieve.  Passing \em null
+		 *		will cause a Traversable object to be returned which
+		 *		traverses all cookies.  Defaults to \em null.
 		 *	\param [in] $default
 		 *		The default value to retrieve if no value is associated
 		 *		with \em key.  Defaults to \em null.
 		 *
 		 *	\return
-		 *		The retrieved value.
+		 *		The retrieved value, or a Traversable if \em null was
+		 *		passed as \em key.
 		 */
-		abstract public function Cookie ($key, $default=null);
+		abstract public function Cookie ($key=null, $default=null);
 		
 		
 		/**
@@ -96,15 +103,37 @@
 		 *	does not exist.
 		 *
 		 *	\param [in] $key
-		 *		The name of the value to retrieve.
+		 *		The name of the value to retrieve.  Passing \em null
+		 *		will cause a Traversable object to be returned which
+		 *		traverses all form values.  Defaults to \em null.
 		 *	\param [in] $default
 		 *		The default value to retrieve if no value is associated
 		 *		with \em key.  Defaults to \em null.
 		 *
 		 *	\return
-		 *		The retrieved value.
+		 *		The retrieved value, or a Traversable if \em null was passed
+		 *		as \em key.
 		 */
-		abstract public function Post ($key, $default=null);
+		abstract public function Post ($key=null, $default=null);
+		
+		
+		/**
+		 *	Retrieves an HTTP header's values or some default if the HTTP
+		 *	header-in-question is not set.
+		 *
+		 *	\param [in] $key
+		 *		The name of the HTTP header-in-question.  Passing \em null
+		 *		will cause a Traversable object to be returned which
+		 *		traverses all headers.  Defaults to \em null.
+		 *	\param [in] $default
+		 *		The default value to retrieve if no HTTP header \em key
+		 *		was sent.  Defaults to \em null.
+		 *
+		 *	\return
+		 *		The retrieved value, or a Traversable if \em null was passed
+		 *		as \em key.
+		 */
+		abstract public function Header ($key=null, $default=null);
 	
 	
 	}

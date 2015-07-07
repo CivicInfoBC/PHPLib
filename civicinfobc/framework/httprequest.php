@@ -52,24 +52,80 @@
 		}
 		
 		
-		public function Get ($key, $default=null) {
+		private function get_impl ($obj) {
+			
+			foreach ($obj as $key=>$value) if (!is_null($value)) yield $key=>$value;
+			
+		}
 		
-			return \CivicInfoBC\Request::$get->Get($key,$default);
+		
+		private function get_gen () {
+			
+			return $this->get_impl(\CivicInfoBC\Request::$get);
+			
+		}
+		
+		
+		public function Get ($key=null, $default=null) {
+			
+			return is_null($key) ? $this->get_gen() : \CivicInfoBC\Request::$get->Get($key,$default);
 		
 		}
 		
 		
-		public function Cookie ($key, $default=null) {
+		private function get_cookie () {
+			
+			return $this->get_impl(\CivicInfoBC\Request::$cookie);
+			
+		}
 		
-			return \CivicInfoBC\Request::$cookie->Get($key,$default);
+		
+		public function Cookie ($key=null, $default=null) {
+			
+			return is_null($key) ? $this->get_cookie() : \CivicInfoBC\Request::$cookie->Get($key,$default);
 		
 		}
 		
 		
-		public function Post ($key, $default=null) {
+		private function get_post () {
+			
+			return $this->get_impl(\CivicInfoBC\Request::$post);
+			
+		}
 		
-			return \CivicInfoBC\Request::$post->Get($key,$default);
 		
+		public function Post ($key=null, $default=null) {
+		
+			return is_null($key) ? $this->get_post() : \CivicInfoBC\Request::$post->Get($key,$default);
+		
+		}
+		
+		
+		private function get_header () {
+			
+			$pattern='/^HTTP_/u';
+			foreach ($this->get_impl(\CivicInfoBC\Request::$server) as $key=>$value) {
+				
+				if (!\CivicInfoBC\Regex::IsMatch($pattern,$key)) continue;
+				
+				$key=\CivicInfoBC\Regex::Replace($pattern,'',$key);
+				$key=\CivicInfoBC\String::ToLower($key);
+				yield $key=>$value;
+				
+			}
+			
+		}
+		
+		
+		public function Header ($key=null, $default=null) {
+			
+			if (is_null($key)) return $this->get_header();
+			
+			$key='HTTP_'.\CivicInfoBC\String::ToUpper($key);
+			if (isset(\CivicInfoBC\Request::$server->$key)) return \CivicInfoBC\Request::$server->$key;
+			
+			return $default;
+			
 		}
 	
 	

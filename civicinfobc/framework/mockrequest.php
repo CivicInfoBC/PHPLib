@@ -15,6 +15,7 @@
 		private $get=array();
 		private $cookie=array();
 		private $post=array();
+		private $header=array();
 		
 		
 		public function SetArguments (array $args) {
@@ -94,7 +95,9 @@
 		}
 		
 		
-		public function Get ($key, $default=null) {
+		public function Get ($key=null, $default=null) {
+			
+			if (is_null($key)) return new \ArrayIterator($this->get);
 			
 			return isset($this->get[$key]) ? $this->get[$key] : $default;
 			
@@ -108,7 +111,9 @@
 		}
 		
 		
-		public function Post ($key, $default=null) {
+		public function Post ($key=null, $default=null) {
+			
+			if (is_null($key)) return new \ArrayIterator($this->post);
 			
 			return isset($this->post[$key]) ? $this->post[$key] : $default;
 			
@@ -122,9 +127,27 @@
 		}
 		
 		
-		public function Cookie ($key, $default=null) {
+		public function Cookie ($key=null, $default=null) {
+			
+			if (is_null($key)) return new \ArrayIterator($this->cookie);
 			
 			return isset($this->cookie[$key]) ? $this->cookie[$key] : $default;
+			
+		}
+		
+		
+		public function SetHeader (array $arr) {
+			
+			$this->header=$arr;
+			
+		}
+		
+		
+		public function Header ($key=null, $default=null) {
+			
+			if (is_null($key)) return new \ArrayIterator($this->header);
+			
+			return isset($this->header[$key]) ? $this->header[$key] : $default;
 			
 		}
 		
