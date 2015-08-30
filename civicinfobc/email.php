@@ -113,15 +113,17 @@
 			$headers='';
 			foreach ($this->headers as $key=>$value) $headers.=self::get_header($key,$value);
 			
-			if (!ArrayUtil::In($this->headers,'From')) $headers.=self::get_header('From',$this->from);
+			$k=array_keys($this->headers);
 			
-			if (!ArrayUtil::In($this->headers,'To')) $headers.=self::get_header('To',$this->to);
+			if (!ArrayUtil::In($k,'From')) $headers.=self::get_header('From',$this->from);
 			
-			if (!ArrayUtil::In($this->headers,'CC')) $headers.=self::get_header('CC',$this->cc);
+			if (!ArrayUtil::In($k,'To')) $headers.=self::get_header('To',$this->to);
 			
-			if (!ArrayUtil::In($this->headers,'BCC')) $headers.=self::get_header('BCC',$this->bcc);
+			if (!ArrayUtil::In($k,'CC')) $headers.=self::get_header('CC',$this->cc);
 			
-			if (!ArrayUtil::In($this->headers,'Content-Type')) $headers.=self::get_header(
+			if (!ArrayUtil::In($k,'BCC')) $headers.=self::get_header('BCC',$this->bcc);
+			
+			if (!ArrayUtil::In($k,'Content-Type')) $headers.=self::get_header(
 				'Content-Type',
 				'text/html; charset=utf-8'
 			);
