@@ -1,0 +1,8 @@
+{
+	"name":"civicinfobc/phplib",
+	"autoload":{
+		"psr-4":{
+			"CivicInfoBC\\":["civicinfobc"]
+		}
+	}
+}
