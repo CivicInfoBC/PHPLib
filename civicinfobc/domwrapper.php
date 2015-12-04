@@ -41,7 +41,7 @@
 		public function __construct (\DOMNode $node, $filter=true) {
 		
 			$this->root=$node;
-			$this->filter=is_bool($filter) ? $filter : String::ToLower($filter);
+			$this->filter=is_bool($filter) ? $filter : StringUtil::ToLower($filter);
 			
 			$this->rewind();
 		
@@ -94,8 +94,8 @@
 			
 			} while (!(
 				is_null($this->curr) ||
-				String::Equals(
-					String::ToLower($this->curr->tagName),
+				StringUtil::Equals(
+					StringUtil::ToLower($this->curr->tagName),
 					$this->filter
 				)
 			));
@@ -148,7 +148,7 @@
 		public function GetAttribute ($name, $default=null) {
 		
 			return is_null($node=$this->root->attributes->getNamedItem(
-				String::ToLower($name)
+				StringUtil::ToLower($name)
 			)) ? null : $node->nodeValue;
 		
 		}

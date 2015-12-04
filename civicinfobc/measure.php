@@ -179,8 +179,8 @@
 			if (!$from->info->DoesMeasure($to->info->quantity)) throw new \InvalidArgumentException(
 				sprintf(
 					'Expected a measure of %s but a measure of %s was given',
-					String::ToLower($from->info->quantity),
-					String::ToLower($to->info->quantity)
+					StringUtil::ToLower($from->info->quantity),
+					StringUtil::ToLower($to->info->quantity)
 				)
 			);
 		

@@ -206,7 +206,7 @@
 					$this->Escape($value)
 				);
 				
-				if (\CivicInfoBC\String::Equals($key,$key_column)) {
+				if (\CivicInfoBC\StringUtil::Equals($key,$key_column)) {
 				
 					$where.=$str;
 					

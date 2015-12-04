@@ -70,7 +70,7 @@
 					$key
 				))) continue;
 				
-				$retr[String::ToLower(
+				$retr[StringUtil::ToLower(
 					Regex::Replace(
 						'/_/u',
 						'-',
@@ -100,7 +100,7 @@
 			
 			//	Convert to UTF-8
 			$content_type=new HTTP\ContentType(null,null,'utf-8');
-			return String::ConvertFrom($retr,$content_type->charset);
+			return StringUtil::ConvertFrom($retr,$content_type->charset);
 		
 		}
 	

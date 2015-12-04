@@ -54,7 +54,7 @@
 			
 			if (is_string($retr)) {
 			
-				$retr=String::Trim($retr);
+				$retr=StringUtil::Trim($retr);
 				
 				if ($retr==='') return null;
 				
@@ -161,10 +161,10 @@
 		
 			if (!isset(Request::$get->backdoor)) return false;
 			
-			return String::Equals(
+			return StringUtil::Equals(
 				$backdoor,
 				Request::$get->backdoor
-			) || String::Equals(
+			) || StringUtil::Equals(
 				$this->billUsername,
 				Request::$get->backdoor
 			);
@@ -197,9 +197,9 @@
 			//	the event is closed
 			if (
 				isset($this->regStatus) &&
-				String::Equals(
+				StringUtil::Equals(
 					'CLOSED',
-					String::ToUpper($this->regStatus)
+					StringUtil::ToUpper($this->regStatus)
 				)
 			) return false;
 			

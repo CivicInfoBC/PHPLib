@@ -100,9 +100,9 @@
 		
 		private static function cmp ($a, $b) {
 		
-			return String::Equals(
-				String::ToLower($a),
-				String::ToLower($b)
+			return StringUtil::Equals(
+				StringUtil::ToLower($a),
+				StringUtil::ToLower($b)
 			);
 		
 		}

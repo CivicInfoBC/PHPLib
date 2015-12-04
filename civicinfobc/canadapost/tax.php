@@ -47,7 +47,7 @@
 			
 				$tax=new self();
 				$tax->amount=$amount;
-				$tax->type=\CivicInfoBC\String::ToUpper($child->tagName);
+				$tax->type=\CivicInfoBC\StringUtil::ToUpper($child->tagName);
 				$child=new \CivicInfoBC\DOMWrapper($child);
 				$tax->percentage=\CivicInfoBC\Convert::ToFloatOrThrow($child['percent']);
 				

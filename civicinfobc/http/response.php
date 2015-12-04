@@ -48,7 +48,7 @@
 			//	Loop over headers and attempt to find
 			//	the Content-Type header
 			$charset=null;
-			foreach ($this->headers as $key=>$value) if (\CivicInfoBC\String::ToLower($key)==='content-type') {
+			foreach ($this->headers as $key=>$value) if (\CivicInfoBC\StringUtil::ToLower($key)==='content-type') {
 			
 				//	Parse
 				$parser=new ContentType($value);
@@ -75,7 +75,7 @@
 		 */
 		public function GetBody () {
 		
-			return \CivicInfoBC\String::ConvertFrom(
+			return \CivicInfoBC\StringUtil::ConvertFrom(
 				$this->body,
 				$this->get_encoding()
 			);

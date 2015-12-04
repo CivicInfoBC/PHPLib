@@ -103,7 +103,7 @@
 			
 			if (is_null($comparer)) $comparer=function ($a, $b) {
 			
-				if (is_string($a)) return is_string($b) ? String::Equals($a,$b) : false;
+				if (is_string($a)) return is_string($b) ? StringUtil::Equals($a,$b) : false;
 				
 				return $a===$b;
 			

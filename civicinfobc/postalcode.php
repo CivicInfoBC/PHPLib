@@ -19,7 +19,7 @@
 		private static function normalize_impl ($str) {
 		
 			//	Get rid of leading/trailing whitespace
-			$str=String::Trim($str);
+			$str=StringUtil::Trim($str);
 			
 			//	Make sure the postal code begins and
 			//	ends with a permissible character
@@ -55,12 +55,12 @@
 			//	10 characters, or less than 3 characters
 			//	in length
 			if (
-				(($len=String::Length($str))>10) ||
+				(($len=StringUtil::Length($str))>10) ||
 				($len<3)
 			) return null;
 			
 			//	Upper case and return
-			return String::ToUpper($str);
+			return StringUtil::ToUpper($str);
 		
 		}
 		

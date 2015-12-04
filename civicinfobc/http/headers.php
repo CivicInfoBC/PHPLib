@@ -46,7 +46,7 @@
 		
 		private static function to_key ($key) {
 		
-			return \CivicInfoBC\String::ToLower($key);
+			return \CivicInfoBC\StringUtil::ToLower($key);
 		
 		}
 		

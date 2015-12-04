@@ -62,7 +62,7 @@
 		
 		private static function is ($a, $b) {
 		
-			return String::Equals($a,$b,true);
+			return StringUtil::Equals($a,$b,true);
 		
 		}
 		
@@ -76,7 +76,7 @@
 		
 		private static function clean ($schema) {
 		
-			return String::Trim(
+			return StringUtil::Trim(
 				Regex::Replace(
 					self::$nullable,
 					'',

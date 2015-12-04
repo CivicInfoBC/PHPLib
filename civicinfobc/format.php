@@ -37,11 +37,11 @@
 			//	2.	Trim leading/trailing whitespace
 			//	3.	Replace all sequences of whitespace
 			//		with single spaces.
-			$name=String::ToLower(
+			$name=StringUtil::ToLower(
 				Regex::Replace(
 					'/(?<=^|\\S)\\s+(?=\\S|$)/u',
 					' ',
-					String::Trim($name)
+					StringUtil::Trim($name)
 				)
 			);
 			
@@ -52,14 +52,14 @@
 				//	is upper cased
 				'/\\b(\\w)/u' => function ($matches) {
 				
-					return String::ToUpper($matches[1]);
+					return StringUtil::ToUpper($matches[1]);
 					
 				},
 				//	Transform names like "O'donnel"
 				//	to "O'Donnel"
 				'/(?<=\\bO\')(\\w)/u' => function ($matches) {
 				
-					return String::ToUpper($matches[1]);
+					return StringUtil::ToUpper($matches[1]);
 				
 				},
 				//	Transform names like "Mcdonald"
@@ -67,14 +67,14 @@
 				//	"MacWilliam", respectively
 				'/\\b(Ma?c)(\\w)/u' => function ($matches) {
 				
-					return $matches[1].String::ToUpper($matches[2]);
+					return $matches[1].StringUtil::ToUpper($matches[2]);
 				
 				},
 				//	Transform "van", "der", etc. to lower
 				//	case
 				'/\\b(v[ao]n|der?)\\b/ui' => function ($matches) {
 				
-					return String::ToLower($matches[1]);
+					return StringUtil::ToLower($matches[1]);
 				
 				}
 			) as $p=>$s) $name=($s instanceof \Closure) ? Regex::ReplaceCallback(

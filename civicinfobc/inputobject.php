@@ -21,7 +21,7 @@
 		
 			if (!isset($this->kv->$key)) return null;
 			
-			$retr=String::Trim($this->kv->$key);
+			$retr=StringUtil::Trim($this->kv->$key);
 			
 			return ($retr==='') ? null : $retr;
 		

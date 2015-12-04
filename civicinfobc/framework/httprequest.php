@@ -109,7 +109,7 @@
 				if (!\CivicInfoBC\Regex::IsMatch($pattern,$key)) continue;
 				
 				$key=\CivicInfoBC\Regex::Replace($pattern,'',$key);
-				$key=\CivicInfoBC\String::ToLower($key);
+				$key=\CivicInfoBC\StringUtil::ToLower($key);
 				yield $key=>$value;
 				
 			}
@@ -121,7 +121,7 @@
 			
 			if (is_null($key)) return $this->get_header();
 			
-			$key='HTTP_'.\CivicInfoBC\String::ToUpper($key);
+			$key='HTTP_'.\CivicInfoBC\StringUtil::ToUpper($key);
 			if (isset(\CivicInfoBC\Request::$server->$key)) return \CivicInfoBC\Request::$server->$key;
 			
 			return $default;

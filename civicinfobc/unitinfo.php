@@ -112,8 +112,8 @@
 		
 			return ArrayUtil::In(
 				$this->symbols,
-				String::Trim($symbol),
-				String::GetComparer($this->symbols_ignore_case)
+				StringUtil::Trim($symbol),
+				StringUtil::GetComparer($this->symbols_ignore_case)
 			);
 		
 		}
@@ -134,8 +134,8 @@
 		
 			return ArrayUtil::In(
 				$this->names,
-				$name=String::Trim($name),
-				$comparer=String::GetComparer(true)
+				$name=StringUtil::Trim($name),
+				$comparer=StringUtil::GetComparer(true)
 			) || ArrayUtil::In(
 				$this->plural,
 				$name,
@@ -177,7 +177,7 @@
 		 */
 		public function DoesMeasure ($quantity) {
 		
-			return String::Equals($this->quantity,$quantity,true);
+			return StringUtil::Equals($this->quantity,$quantity,true);
 		
 		}
 		
