@@ -49,7 +49,23 @@
 			
 			return self::transliterate('Any-Lower',$string);
 		
+		}
 		
+		
+		/**
+		 *	Transforms a string to titlecase.
+		 *
+		 *	\param [in] $string
+		 *		The string.
+		 *
+		 *	\return
+		 *		\em string with all its characters
+		 *		transformed to titlecase.
+		 */
+		public static function ToTitle ($string) {
+			
+			return self::transliterate('Any-Title',$string);
+			
 		}
 		
 		
