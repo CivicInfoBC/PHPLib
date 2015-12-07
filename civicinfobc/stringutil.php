@@ -4,18 +4,18 @@
 	namespace CivicInfoBC;
 	
 	
-	if (function_exists('mb_internal_encoding')) mb_internal_encoding('utf-8');
-	
-	
 	/**
-	 *	Contains utilities for safely working
-	 *	with strings.
-	 *
-	 *	In all cases Unicode-aware functions will
-	 *	be used (with the assumption of UTF-8 unless
-	 *	otherwise specified) if they are available.
+	 *	Contains utilities for working with strings in
+	 *	a Unicode-aware manner.
 	 */
 	class StringUtil {
+		
+		
+		private static function transliterate ($id, $str) {
+			
+			return \Transliterator::create($id)->transliterate($str);
+			
+		}
 	
 	
 		/**
@@ -29,8 +29,8 @@
 		 *		transformed to uppercase.
 		 */
 		public static function ToUpper ($string) {
-		
-			return function_exists('mb_strtoupper') ? mb_strtoupper($string) : strtoupper($string);
+			
+			return self::transliterate('Any-Upper',$string);
 		
 		}
 		
@@ -46,16 +46,16 @@
 		 *		transformed to lowercase.
 		 */
 		public static function ToLower ($string) {
+			
+			return self::transliterate('Any-Lower',$string);
 		
-			return function_exists('mb_strtolower') ? mb_strtolower($string) : strtolower($string);
 		
 		}
 		
 		
 		/**
 		 *	Normalizes a string to a certain Unicode
-		 *	canonical form.  If Unicode-aware functions
-		 *	are unavailable, does nothing.
+		 *	canonical form.
 		 *
 		 *	\param [in] $string
 		 *		The string to normalize.
@@ -70,16 +70,8 @@
 		 *		specified normal form.
 		 */
 		public static function Normalize ($string, $normal_form=null) {
-		
-			return (
-				class_exists('Normalizer')
-					?	(
-							is_null($normal_form)
-								?	\Normalizer::normalize($string)
-								:	\Normalizer::normalize($string,$normal_form)
-						)
-					:	(string)$string
-			);
+			
+			return is_null($normal_form) ? \Normalizer::normalize($string) : \Normalizer::normalize($string,$normal_form);
 		
 		}
 		
@@ -149,8 +141,10 @@
 		 *		The number of code points in \em string.
 		 */
 		public static function Length ($string) {
-		
-			return function_exists('mb_strlen') ? mb_strlen($string) : strlen($string);
+			
+			$i=new \IntlCodePointBreakIterator();
+			$i->setText($string);
+			return iterator_count($i);
 		
 		}
 		
@@ -174,20 +168,14 @@
 		 *		a positive number if \em a greater than \em b.
 		 */
 		public static function Compare ($a, $b, $collation=null) {
-		
-			if (class_exists('Collator')) {
 			
-				$c=new \Collator($collation);
-				$c->setAttribute(
-					\Collator::NORMALIZATION_MODE,
-					\Collator::ON
-				);
-				
-				return $c->compare($a,$b);
+			$c=new \Collator($collation);
+			$c->setAttribute(
+				\Collator::NORMALIZATION_MODE,
+				\Collator::ON
+			);
 			
-			}
-			
-			return strcmp($a,$b);
+			return $c->compare($a,$b);
 		
 		}
 		
@@ -435,33 +423,6 @@
 		public static function ConvertFrom ($string, $encoding) {
 		
 			return self::Convert($string,'utf-8',$encoding);
-		
-		}
-		
-		
-		/**
-		 *	Determines if the current platform supports
-		 *	all multi-byte string operations.
-		 *
-		 *	This requires that the PHP mbstring and intl
-		 *	extensions be installed and enabled.
-		 *
-		 *	\return
-		 *		\em true if all Unicode operations this
-		 *		class provides are supported on this
-		 *		platform, \em false otherwise.
-		 */
-		public static function IsMultiByte () {
-		
-			return (
-				function_exists('mb_internal_encoding') &&
-				function_exists('mb_strtoupper') &&
-				function_exists('mb_strtolower') &&
-				class_exists('Normalizer') &&
-				function_exists('mb_strlen') &&
-				class_exists('Collator') &&
-				function_exists('mb_convert_encoding')
-			);
 		
 		}
 	
