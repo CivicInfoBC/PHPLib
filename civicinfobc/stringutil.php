@@ -328,9 +328,9 @@
 		 */
 		public static function Length ($string) {
 			
-			$i=new \IntlCodePointBreakIterator();
+			$i=\IntlCodePointBreakIterator::createCodePointInstance();
 			$i->setText($string);
-			return iterator_count($i);
+			return iterator_count($i)-1;
 		
 		}
 		
