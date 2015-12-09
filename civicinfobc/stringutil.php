@@ -335,6 +335,20 @@
 		}
 		
 		
+		private static function collator_raise (\Collator $c) {
+			
+			throw new \Exception($c->getErrorMessage(),$c->getErrorCode());
+			
+		}
+		
+		
+		private static function collator_set (\Collator $c, $o, $v) {
+			
+			if (!$c->setAttribute($o,$v)) self::collator_raise($c);
+			
+		}
+		
+		
 		/**
 		 *	Compares two strings.
 		 *
@@ -356,12 +370,13 @@
 		public static function Compare ($a, $b, $collation=null) {
 			
 			$c=new \Collator($collation);
-			$c->setAttribute(
-				\Collator::NORMALIZATION_MODE,
-				\Collator::ON
-			);
 			
-			return $c->compare($a,$b);
+			self::collator_set($c,\Collator::NORMALIZATION_MODE,\Collator::ON);
+			
+			$retr=$c->compare($a,$b);
+			if ($retr===false) self::collator_raise($c);
+			
+			return $retr;
 		
 		}
 		
