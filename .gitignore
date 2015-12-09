@@ -4,3 +4,4 @@
 !/*_test*
 /templates/*
 !/templates/*test*
+vendor
