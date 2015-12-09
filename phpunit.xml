@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit convertWarningsToExceptions="false" bootstrap="init.php">
+	<testsuites>
+		<testsuite name="Form Builder">
+			<directory suffix="test.php">./tests</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
