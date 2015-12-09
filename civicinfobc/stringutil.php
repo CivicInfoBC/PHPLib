@@ -575,14 +575,8 @@
 		 *		by \em to.
 		 */
 		public static function Convert ($string, $to, $from) {
-		
-			if (function_exists('mb_convert_encoding')) return mb_convert_encoding(
-				$string,
-				$to,
-				$from
-			);
 			
-			throw new \Exception('mb_convert_encoding unavailable');
+			return Error::Wrap(function () use ($string, $to, $from) {	return iconv($from,$to,$string);	});
 		
 		}
 		
