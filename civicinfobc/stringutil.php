@@ -82,7 +82,12 @@
 		
 		private static function transliterate ($id, $str) {
 			
-			return \Transliterator::create($id)->transliterate($str);
+			$t=\Transliterator::create($id);
+			if (is_null($t)) throw new \Exception('\\Transliterator::create failed');
+			$retr=$t->transliterate($str);
+			if (is_null($retr)) throw new \Exception('\\Transliterator::transliterate failed');
+			
+			return $retr;
 			
 		}
 		
@@ -257,7 +262,10 @@
 		 */
 		public static function Normalize ($string, $normal_form=null) {
 			
-			return is_null($normal_form) ? \Normalizer::normalize($string) : \Normalizer::normalize($string,$normal_form);
+			$retr=is_null($normal_form) ? \Normalizer::normalize($string) : \Normalizer::normalize($string,$normal_form);
+			if (is_null($retr)) throw new \Exception('\\Normalizer::normalize failed');
+			
+			return $retr;
 		
 		}
 		
