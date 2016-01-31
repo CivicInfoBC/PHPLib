@@ -34,7 +34,7 @@
 		 */
 		public static function Encode ($data, $depth=null) {
 		
-			$json=is_null($depth) ? json_encode($data) : json_encode($data,0,$depth);
+			$json=is_null($depth) ? json_encode($data,JSON_PRESERVE_ZERO_FRACTION) : json_encode($data,JSON_PRESERVE_ZERO_FRACTION,$depth);
 			
 			self::check();
 			
